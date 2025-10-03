@@ -1,2 +1,179 @@
 # next-recipe-hub
-next-recipe-hub is a work-in-progress recipe and shopping list app built with Next.js and TypeScript. The goal is to let users add and search recipes, track ingredients, and generate lists they can share. It’s a playground for testing full-stack features like custom APIs, database integration, and a clean UI.
+
+A full-stack Next.js 15 recipe application built with TypeScript, Prisma, and modern web technologies.
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 20+
+- Docker and Docker Compose
+- npm or pnpm
+
+### Setup
+
+1. **Clone and install dependencies:**
+   ```bash
+   git clone <repository-url>
+   cd next-recipe-hub-1
+   npm install
+   ```
+
+2. **Start PostgreSQL:**
+   ```bash
+   docker compose up -d
+   ```
+
+3. **Set up environment variables:**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+4. **Set up the database:**
+   ```bash
+   npm run db:push
+   npm run db:seed
+   ```
+
+5. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+
+Visit [http://localhost:3000](http://localhost:3000) to see the application.
+
+## 🛠 Tech Stack
+
+- **Framework:** Next.js 15 (App Router, RSC)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS + shadcn/ui
+- **Database:** PostgreSQL + Prisma ORM
+- **Authentication:** NextAuth.js (Email magic link, GitHub/Google OAuth)
+- **Validation:** Zod + react-hook-form
+- **Data Fetching:** TanStack Query (client) + RSC (server)
+- **Testing:** Vitest + React Testing Library + Playwright
+- **Linting:** ESLint + Prettier
+- **CI/CD:** GitHub Actions
+
+## 📁 Project Structure
+
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── (marketing)/        # Marketing pages
+│   ├── (app)/             # Main application
+│   │   ├── recipes/[slug]/ # Recipe detail pages
+│   │   ├── lists/[id]/     # Shopping list pages
+│   │   ├── dashboard/      # User dashboard
+│   │   └── api/           # API routes
+├── components/            # React components
+│   ├── ui/                # shadcn/ui components
+│   ├── layout/            # Layout components
+│   ├── recipe/            # Recipe-related components
+│   ├── search/            # Search components
+│   └── list/              # Shopping list components
+├── lib/                   # Utilities and configurations
+├── server/                # Server-side service layer
+└── types/                 # TypeScript type definitions
+```
+
+## 🔧 Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run typecheck` - Run TypeScript type checking
+- `npm run test:unit` - Run unit tests
+- `npm run test:e2e` - Run E2E tests
+- `npm run format` - Format code with Prettier
+- `npm run db:push` - Push database schema
+- `npm run db:migrate` - Run database migrations
+- `npm run db:seed` - Seed database with sample data
+
+## 🔐 Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+
+```env
+# Database
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/next_recipe_hub?schema=public"
+
+# NextAuth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-key"
+
+# Email (optional)
+EMAIL_SERVER_HOST=""
+EMAIL_SERVER_PORT=""
+EMAIL_SERVER_USER=""
+EMAIL_SERVER_PASSWORD=""
+EMAIL_FROM=""
+
+# OAuth (optional)
+GITHUB_ID=""
+GITHUB_SECRET=""
+GOOGLE_ID=""
+GOOGLE_SECRET=""
+```
+
+## 🗄 Database Schema
+
+The application uses Prisma with PostgreSQL and includes models for:
+
+- **User** - User accounts and preferences
+- **Recipe** - Recipe data with steps, ingredients, and nutrition
+- **Ingredient** - Ingredient database with nutritional info
+- **ShoppingList** - User shopping lists
+- **Nutrition** - Recipe nutritional information
+
+## 🧪 Testing
+
+- **Unit Tests:** Vitest + React Testing Library
+- **E2E Tests:** Playwright
+- **Coverage:** Configured for comprehensive testing
+
+Run tests:
+```bash
+npm run test:unit    # Unit tests
+npm run test:e2e     # E2E tests
+```
+
+## 🚀 Deployment
+
+The application is ready for deployment on platforms like Vercel, Netlify, or any Node.js hosting service.
+
+### Production Checklist
+
+- [ ] Set up production database
+- [ ] Configure environment variables
+- [ ] Set up email server (if using email auth)
+- [ ] Configure OAuth providers (if using OAuth)
+- [ ] Run database migrations
+- [ ] Seed production data
+
+## 📝 API Routes
+
+- `GET /api/health` - Health check
+- `GET /api/recipes` - Search recipes
+- `POST /api/recipes` - Create recipe
+- `GET /api/recipes/[id]` - Get recipe by ID
+- `PUT /api/recipes/[id]` - Update recipe
+- `DELETE /api/recipes/[id]` - Delete recipe
+- `GET /api/lists` - Get user lists
+- `POST /api/lists` - Create shopping list
+- `GET /api/ingredients` - Search ingredients
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Run the test suite
+6. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License.
