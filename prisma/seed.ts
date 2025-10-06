@@ -102,7 +102,7 @@ async function main() {
   console.log("✅ Created demo user");
 
   // Create a sample recipe
-  const recipe = await prisma.recipe.upsert({
+  await prisma.recipe.upsert({
     where: { slug: "classic-tomato-pasta" },
     update: {},
     create: {
@@ -183,7 +183,7 @@ async function main() {
   console.log("✅ Created sample recipe");
 
   // Create more sample recipes
-  const recipe2 = await prisma.recipe.upsert({
+  await prisma.recipe.upsert({
     where: { slug: "grilled-chicken-salad" },
     update: {},
     create: {
@@ -238,7 +238,7 @@ async function main() {
     },
   });
 
-  const recipe3 = await prisma.recipe.upsert({
+  await prisma.recipe.upsert({
     where: { slug: "garlic-bread" },
     update: {},
     create: {
@@ -286,7 +286,7 @@ async function main() {
   console.log("✅ Created additional sample recipes");
 
   // Create sample shopping lists
-  const list1 = await prisma.shoppingList.upsert({
+  await prisma.shoppingList.upsert({
     where: { id: "sample-list-1" },
     update: {},
     create: {
@@ -324,7 +324,7 @@ async function main() {
     },
   });
 
-  const list2 = await prisma.shoppingList.upsert({
+  await prisma.shoppingList.upsert({
     where: { id: "sample-list-2" },
     update: {},
     create: {

@@ -30,7 +30,6 @@ import {
   ShoppingCart,
   MoreVertical,
   Eye,
-  Edit,
   Copy,
   Trash2,
   Calendar,
@@ -44,7 +43,7 @@ import type { ShoppingListWithItems } from "@/types";
 type SortOption = "date" | "name" | "items";
 
 export default function ListsPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");

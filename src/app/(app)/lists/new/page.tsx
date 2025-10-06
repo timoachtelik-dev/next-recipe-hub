@@ -32,7 +32,7 @@ export default function NewListPage() {
 
       const list = await response.json();
       router.push(`/lists/${list.id}`);
-    } catch (err) {
+    } catch {
       setError("Failed to create shopping list. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -105,7 +105,7 @@ export default function NewListPage() {
 
             <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
               <p className="text-sm text-blue-800">
-                <strong>Next steps:</strong> After creating your list, you'll be able to add ingredients and quantities.
+                <strong>Next steps:</strong> After creating your list, you&apos;ll be able to add ingredients and quantities.
               </p>
             </div>
           </CardContent>

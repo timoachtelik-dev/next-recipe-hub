@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { getList, updateList, deleteList, toggleListItem, addItemToList } from "@/server/lists";
+import { getList, updateList, deleteList } from "@/server/lists";
 import { updateListSchema } from "@/lib/validators";
 
 export async function GET(

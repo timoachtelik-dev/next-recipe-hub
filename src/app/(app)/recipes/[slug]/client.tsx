@@ -6,8 +6,10 @@ import { AddToShoppingListDialog } from "@/components/recipe/add-to-shopping-lis
 import { AddToListSuccessDialog } from "@/components/recipe/add-to-list-success-dialog";
 import { Plus } from "lucide-react";
 
+import type { RecipeWithDetails } from "@/types";
+
 interface RecipePageClientProps {
-  recipe: any;
+  recipe: RecipeWithDetails;
 }
 
 export function RecipePageClient({ recipe }: RecipePageClientProps) {

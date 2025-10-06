@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, ShoppingCart, Pencil, Check, X } from "lucide-react";
 import { toast } from "sonner";
+import type { ShoppingListWithItems } from "@/types";
+
+type ShoppingListItemWithIngredient = ShoppingListWithItems['items'][0];
 
 export default function ListPage() {
   const params = useParams();
@@ -137,15 +140,15 @@ export default function ListPage() {
             List not found
           </h1>
           <p className="text-gray-600">
-            The shopping list you're looking for doesn't exist or you don't have access to it.
+            The shopping list you&apos;re looking for doesn&apos;t exist or you don&apos;t have access to it.
           </p>
         </div>
       </div>
     );
   }
 
-  const checkedItems = list.items.filter((item: any) => item.checked);
-  const uncheckedItems = list.items.filter((item: any) => !item.checked);
+  const checkedItems = list.items.filter((item: ShoppingListItemWithIngredient) => item.checked);
+  const uncheckedItems = list.items.filter((item: ShoppingListItemWithIngredient) => !item.checked);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -231,7 +234,7 @@ export default function ListPage() {
               To Buy ({uncheckedItems.length})
             </h2>
             <div className="space-y-2">
-              {uncheckedItems.map((item: any) => (
+              {uncheckedItems.map((item: ShoppingListItemWithIngredient) => (
                 <ListItemRow
                   key={item.id}
                   item={item}
@@ -250,7 +253,7 @@ export default function ListPage() {
               Completed ({checkedItems.length})
             </h2>
             <div className="space-y-2">
-              {checkedItems.map((item: any) => (
+              {checkedItems.map((item: ShoppingListItemWithIngredient) => (
                 <ListItemRow
                   key={item.id}
                   item={item}

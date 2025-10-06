@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { RecipeMeta } from "@/components/recipe/recipe-meta";
 import { getRecipeBySlug } from "@/server/recipes";

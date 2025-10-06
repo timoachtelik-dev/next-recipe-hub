@@ -6,6 +6,7 @@ import { SearchBar } from "@/components/search/search-bar";
 import { RecipeCard } from "@/components/recipe/recipe-card";
 import { searchRecipes } from "@/server/recipes";
 import { recipeSearchSchema } from "@/lib/validators";
+import type { RecipeWithDetails } from "@/types";
 
 interface HomePageProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -40,7 +41,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
       <Suspense fallback={<RecipeGridSkeleton />}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recipes.map((recipe: any) => (
+          {recipes.map((recipe: RecipeWithDetails) => (
             <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
         </div>
