@@ -1,6 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { searchIngredients } from "@/server/ingredients";
 
+// Define a proper type for macros
+type MacroData = {
+  protein: number;
+  carbs: number;
+  fat: number;
+};
+
 // Mock Prisma
 vi.mock("@/lib/db", () => ({
   prisma: {
@@ -20,18 +27,18 @@ describe("Ingredients Service", () => {
       { 
         id: "tomato", 
         name: "Tomato", 
-        category: "vegetable",
-        kcalPer100g: 18,
-        macros: { protein: 0.9, carbs: 3.9, fat: 0.2 } as any,
-        aliases: [] 
+        category: "vegetable" as string | null,
+        kcalPer100g: 18 as number | null,
+        macros: { protein: 0.9, carbs: 3.9, fat: 0.2 } as MacroData,
+        aliases: [] as string[]
       },
       { 
         id: "cherry-tomato", 
         name: "Cherry Tomato", 
-        category: "vegetable",
-        kcalPer100g: 18,
-        macros: { protein: 0.9, carbs: 3.9, fat: 0.2 } as any,
-        aliases: [] 
+        category: "vegetable" as string | null,
+        kcalPer100g: 18 as number | null,
+        macros: { protein: 0.9, carbs: 3.9, fat: 0.2 } as MacroData,
+        aliases: [] as string[]
       },
     ];
     
