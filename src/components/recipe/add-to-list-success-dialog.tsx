@@ -40,7 +40,7 @@ export function AddToListSuccessDialog({
             Items Added Successfully!
           </DialogTitle>
           <DialogDescription>
-            {itemCount} ingredient{itemCount !== 1 ? 's' : ''} from the recipe have been added to "{listName}"
+            {itemCount} ingredient{itemCount !== 1 ? 's' : ''} from the recipe have been added to &quot;{listName}&quot;
           </DialogDescription>
         </DialogHeader>
 
@@ -50,7 +50,7 @@ export function AddToListSuccessDialog({
             <span className="font-medium">Ready for shopping!</span>
           </div>
           <p className="text-sm text-green-700 mt-1">
-            Your shopping list "{listName}" now contains {itemCount} new item{itemCount !== 1 ? 's' : ''}.
+            Your shopping list &quot;{listName}&quot; now contains {itemCount} new item{itemCount !== 1 ? 's' : ''}.
           </p>
         </div>
 

@@ -27,7 +27,12 @@ export async function createIngredient(data: {
   macros?: Record<string, unknown>;
   aliases?: string[];
 }) {
+  // Convert macros to a type compatible with Prisma's InputJsonValue
+  const { macros, ...rest } = data;
   return await prisma.ingredient.create({
-    data,
+    data: {
+      ...rest,
+      macros: macros !== undefined ? JSON.parse(JSON.stringify(macros)) : undefined,
+    },
   });
 }
