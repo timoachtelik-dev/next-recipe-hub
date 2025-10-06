@@ -6,13 +6,17 @@ import { useParams } from "next/navigation";
 import { ListItemRow } from "@/components/list/list-item-row";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, ShoppingCart } from "lucide-react";
+import { Plus, ShoppingCart, Pencil, Check, X } from "lucide-react";
+import { toast } from "sonner";
 
 export default function ListPage() {
   const params = useParams();
   const listId = params.id as string;
   const queryClient = useQueryClient();
   const [newItem, setNewItem] = useState("");
+  const [isAddingItem, setIsAddingItem] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editedName, setEditedName] = useState("");
 
   const { data: list, isLoading } = useQuery({
     queryKey: ["list", listId],
@@ -25,13 +29,14 @@ export default function ListPage() {
 
   const toggleItemMutation = useMutation({
     mutationFn: async (itemId: string) => {
-      const response = await fetch(`/api/lists/${listId}/items/${itemId}/toggle`, {
+      const response = await fetch(`/api/lists/${listId}/items/${itemId}`, {
         method: "PATCH",
       });
       if (!response.ok) throw new Error("Failed to toggle item");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["list", listId] });
+      queryClient.invalidateQueries({ queryKey: ["lists"] });
     },
   });
 
@@ -44,8 +49,68 @@ export default function ListPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["list", listId] });
+      queryClient.invalidateQueries({ queryKey: ["lists"] });
     },
   });
+
+  const updateListNameMutation = useMutation({
+    mutationFn: async (name: string) => {
+      const response = await fetch(`/api/lists/${listId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+      if (!response.ok) throw new Error("Failed to update list name");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["list", listId] });
+      queryClient.invalidateQueries({ queryKey: ["lists"] });
+      setIsEditingName(false);
+      toast.success("List name updated");
+    },
+    onError: () => {
+      toast.error("Failed to update list name");
+    },
+  });
+
+  const handleAddItem = async () => {
+    if (!newItem.trim()) return;
+
+    setIsAddingItem(true);
+    try {
+      const response = await fetch(`/api/lists/${listId}/items`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newItem.trim() }),
+      });
+
+      if (!response.ok) throw new Error("Failed to add item");
+
+      setNewItem("");
+      queryClient.invalidateQueries({ queryKey: ["list", listId] });
+      queryClient.invalidateQueries({ queryKey: ["lists"] });
+    } catch (error) {
+      console.error("Error adding item:", error);
+    } finally {
+      setIsAddingItem(false);
+    }
+  };
+
+  const handleStartEdit = () => {
+    setEditedName(list.name);
+    setIsEditingName(true);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editedName.trim()) return;
+    updateListNameMutation.mutate(editedName.trim());
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingName(false);
+    setEditedName("");
+  };
 
   if (isLoading) {
     return (
@@ -85,11 +150,57 @@ export default function ListPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-2xl mx-auto">
+        {/* List Name with Edit */}
         <div className="flex items-center gap-3 mb-6">
-          <ShoppingCart className="h-6 w-6 text-orange-600" />
-          <h1 className="text-2xl font-bold text-gray-900">
-            {list.name}
-          </h1>
+          <ShoppingCart className="h-6 w-6 text-orange-600 flex-shrink-0" />
+          {isEditingName ? (
+            <div className="flex items-center gap-2 flex-1">
+              <Input
+                value={editedName}
+                onChange={(e) => setEditedName(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter" && editedName.trim()) {
+                    handleSaveEdit();
+                  } else if (e.key === "Escape") {
+                    handleCancelEdit();
+                  }
+                }}
+                className="text-xl font-bold"
+                autoFocus
+              />
+              <Button
+                size="sm"
+                onClick={handleSaveEdit}
+                disabled={!editedName.trim() || updateListNameMutation.isPending}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                <Check className="h-4 w-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleCancelEdit}
+                disabled={updateListNameMutation.isPending}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3 flex-1">
+              <h1 className="text-2xl font-bold text-gray-900">
+                {list.name}
+              </h1>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleStartEdit}
+                className="text-gray-500 hover:text-gray-700"
+                aria-label="Edit list name"
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Add Item Form */}
@@ -99,13 +210,16 @@ export default function ListPage() {
             value={newItem}
             onChange={(e) => setNewItem(e.target.value)}
             onKeyPress={(e) => {
-              if (e.key === "Enter" && newItem.trim()) {
-                // TODO: Implement add item functionality
-                setNewItem("");
+              if (e.key === "Enter" && newItem.trim() && !isAddingItem) {
+                handleAddItem();
               }
             }}
+            disabled={isAddingItem}
           />
-          <Button disabled={!newItem.trim()}>
+          <Button 
+            onClick={handleAddItem}
+            disabled={!newItem.trim() || isAddingItem}
+          >
             <Plus className="h-4 w-4" />
           </Button>
         </div>

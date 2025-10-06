@@ -51,6 +51,14 @@ export async function updateList(id: string, data: UpdateListInput, userId: stri
 }
 
 export async function deleteList(id: string, userId: string) {
+  // First, delete all items in the list
+  await prisma.shoppingListItem.deleteMany({
+    where: {
+      listId: id,
+    },
+  });
+
+  // Then delete the list itself
   return await prisma.shoppingList.delete({
     where: {
       id,
@@ -90,12 +98,23 @@ export async function toggleListItem(listId: string, itemId: string, userId: str
     throw new Error("Item not found");
   }
 
-  return await prisma.shoppingListItem.update({
-    where: { id: itemId },
-    data: {
-      checked: !currentItem.checked,
-    },
-  });
+  // Update the item and the parent list's updatedAt
+  const [updatedItem] = await prisma.$transaction([
+    prisma.shoppingListItem.update({
+      where: { id: itemId },
+      data: {
+        checked: !currentItem.checked,
+      },
+    }),
+    prisma.shoppingList.update({
+      where: { id: listId },
+      data: {
+        updatedAt: new Date(),
+      },
+    }),
+  ]);
+
+  return updatedItem;
 }
 
 export async function addItemToList(
@@ -113,15 +132,26 @@ export async function addItemToList(
     throw new Error("List not found");
   }
 
-  return await prisma.shoppingListItem.create({
-    data: {
-      listId,
-      ingredientId,
-      qty,
-      unit,
-    },
-    include: {
-      ingredient: true,
-    },
-  });
+  // Create the item and update the parent list's updatedAt
+  const [item] = await prisma.$transaction([
+    prisma.shoppingListItem.create({
+      data: {
+        listId,
+        ingredientId,
+        qty,
+        unit,
+      },
+      include: {
+        ingredient: true,
+      },
+    }),
+    prisma.shoppingList.update({
+      where: { id: listId },
+      data: {
+        updatedAt: new Date(),
+      },
+    }),
+  ]);
+
+  return item;
 }

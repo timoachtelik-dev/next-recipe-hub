@@ -182,6 +182,182 @@ async function main() {
 
   console.log("✅ Created sample recipe");
 
+  // Create more sample recipes
+  const recipe2 = await prisma.recipe.upsert({
+    where: { slug: "grilled-chicken-salad" },
+    update: {},
+    create: {
+      title: "Grilled Chicken Salad",
+      slug: "grilled-chicken-salad",
+      summary: "A healthy and protein-rich salad with grilled chicken breast.",
+      steps: [
+        { order: 1, text: "Season chicken breast with salt and pepper." },
+        { order: 2, text: "Grill chicken for 6-8 minutes per side until fully cooked." },
+        { order: 3, text: "Let the chicken rest for 5 minutes, then slice." },
+        { order: 4, text: "Arrange fresh greens on a plate." },
+        { order: 5, text: "Top with sliced chicken and your favorite dressing." },
+      ],
+      prepMinutes: 15,
+      cookMinutes: 15,
+      servings: 2,
+      diets: ["high_protein", "low_carb"],
+      tags: ["healthy", "quick", "lunch"],
+      authorId: user.id,
+      items: {
+        create: [
+          {
+            ingredientId: "chicken_breast",
+            qty: 300,
+            unit: "g",
+          },
+          {
+            ingredientId: "olive_oil",
+            qty: 2,
+            unit: "tbsp",
+          },
+          {
+            ingredientId: "salt",
+            qty: 0.5,
+            unit: "tsp",
+          },
+          {
+            ingredientId: "black_pepper",
+            qty: 0.25,
+            unit: "tsp",
+          },
+        ],
+      },
+      nutrition: {
+        create: {
+          kcal: 320,
+          protein: 42,
+          carbs: 8,
+          fat: 14,
+        },
+      },
+    },
+  });
+
+  const recipe3 = await prisma.recipe.upsert({
+    where: { slug: "garlic-bread" },
+    update: {},
+    create: {
+      title: "Classic Garlic Bread",
+      slug: "garlic-bread",
+      summary: "Crispy, buttery garlic bread perfect as a side dish.",
+      steps: [
+        { order: 1, text: "Preheat oven to 180°C (350°F)." },
+        { order: 2, text: "Mix softened butter with minced garlic." },
+        { order: 3, text: "Spread garlic butter on bread slices." },
+        { order: 4, text: "Bake for 10-12 minutes until golden and crispy." },
+        { order: 5, text: "Sprinkle with fresh parsley and serve warm." },
+      ],
+      prepMinutes: 5,
+      cookMinutes: 12,
+      servings: 4,
+      diets: ["vegetarian"],
+      tags: ["side", "quick", "comfort"],
+      authorId: user.id,
+      items: {
+        create: [
+          {
+            ingredientId: "garlic",
+            qty: 4,
+            unit: "cloves",
+          },
+          {
+            ingredientId: "basil",
+            qty: 2,
+            unit: "tbsp",
+          },
+        ],
+      },
+      nutrition: {
+        create: {
+          kcal: 220,
+          protein: 4,
+          carbs: 28,
+          fat: 10,
+        },
+      },
+    },
+  });
+
+  console.log("✅ Created additional sample recipes");
+
+  // Create sample shopping lists
+  const list1 = await prisma.shoppingList.upsert({
+    where: { id: "sample-list-1" },
+    update: {},
+    create: {
+      id: "sample-list-1",
+      name: "Weekly Groceries",
+      userId: user.id,
+      items: {
+        create: [
+          {
+            ingredientId: "tomato",
+            qty: 6,
+            unit: "pieces",
+            checked: false,
+          },
+          {
+            ingredientId: "onion",
+            qty: 3,
+            unit: "pieces",
+            checked: true,
+          },
+          {
+            ingredientId: "chicken_breast",
+            qty: 500,
+            unit: "g",
+            checked: false,
+          },
+          {
+            ingredientId: "olive_oil",
+            qty: 1,
+            unit: "bottle",
+            checked: false,
+          },
+        ],
+      },
+    },
+  });
+
+  const list2 = await prisma.shoppingList.upsert({
+    where: { id: "sample-list-2" },
+    update: {},
+    create: {
+      id: "sample-list-2",
+      name: "Pasta Night",
+      userId: user.id,
+      items: {
+        create: [
+          {
+            ingredientId: "pasta_dry",
+            qty: 500,
+            unit: "g",
+            checked: true,
+          },
+          {
+            ingredientId: "parmesan",
+            qty: 100,
+            unit: "g",
+            checked: true,
+          },
+          {
+            ingredientId: "basil",
+            qty: 1,
+            unit: "bunch",
+            checked: false,
+          },
+        ],
+      },
+    },
+  });
+
+  console.log("✅ Created sample shopping lists");
+
   console.log("🎉 Seeding completed!");
 }
 

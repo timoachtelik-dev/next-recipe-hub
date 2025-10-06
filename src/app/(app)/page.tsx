@@ -1,4 +1,7 @@
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { SearchBar } from "@/components/search/search-bar";
 import { RecipeCard } from "@/components/recipe/recipe-card";
 import { searchRecipes } from "@/server/recipes";
@@ -9,6 +12,11 @@ interface HomePageProps {
 }
 
 export default async function HomePage({ searchParams }: HomePageProps) {
+  const session = await getServerSession(authOptions);
+  
+  if (!session?.user) {
+    redirect("/auth/signin?callbackUrl=/app");
+  }
   const params = {
     q: typeof searchParams.q === "string" ? searchParams.q : undefined,
     tags: typeof searchParams.tags === "string" ? searchParams.tags.split(",") : undefined,

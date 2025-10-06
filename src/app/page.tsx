@@ -1,8 +1,15 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/components/search/search-bar";
+import { RecipeCard } from "@/components/recipe/recipe-card";
+import { searchRecipes } from "@/server/recipes";
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Fetch featured recipes (latest 3)
+  const { recipes } = await searchRecipes({
+    page: 1,
+    limit: 3,
+  });
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
       <div className="container mx-auto px-4 py-16">
@@ -16,10 +23,7 @@ export default function HomePage() {
           </p>
           <div className="flex gap-4 justify-center">
             <Button asChild size="lg">
-              <Link href="/#recipes">Get Started</Link>
-            </Button>
-            <Button asChild variant="outline" size="lg">
-              <Link href="/#recipes">Browse Recipes</Link>
+              <Link href="/auth/signin">Get Started</Link>
             </Button>
           </div>
         </div>
@@ -66,43 +70,29 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">
             Featured Recipes
           </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                <span className="text-gray-500">[Recipe Image]</span>
+          {recipes.length > 0 ? (
+            <>
+              <div className="grid md:grid-cols-3 gap-6 mb-8">
+                {recipes.map((recipe) => (
+                  <RecipeCard key={recipe.id} recipe={recipe} />
+                ))}
               </div>
-              <h3 className="text-xl font-semibold mb-2">Classic Tomato Pasta</h3>
-              <p className="text-gray-600 mb-4">A simple and delicious pasta dish with fresh tomatoes and basil.</p>
-              <div className="flex justify-between items-center text-sm text-gray-500">
-                <span>30 min</span>
-                <span>520 kcal</span>
+              <div className="text-center">
+                <Button asChild size="lg">
+                  <Link href="/auth/signin?callbackUrl=/app">View All Recipes</Link>
+                </Button>
               </div>
+            </>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-600 mb-6">
+                No recipes available yet. Be the first to create one!
+              </p>
+              <Button asChild size="lg">
+                <Link href="/auth/signin?callbackUrl=/dashboard">Create Recipe</Link>
+              </Button>
             </div>
-            
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                <span className="text-gray-500">[Recipe Image]</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Mediterranean Salad</h3>
-              <p className="text-gray-600 mb-4">Fresh vegetables with olive oil and herbs.</p>
-              <div className="flex justify-between items-center text-sm text-gray-500">
-                <span>15 min</span>
-                <span>280 kcal</span>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                <span className="text-gray-500">[Recipe Image]</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Chicken Stir Fry</h3>
-              <p className="text-gray-600 mb-4">Quick and healthy chicken with vegetables.</p>
-              <div className="flex justify-between items-center text-sm text-gray-500">
-                <span>25 min</span>
-                <span>450 kcal</span>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

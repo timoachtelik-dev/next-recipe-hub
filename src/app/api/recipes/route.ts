@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { createRecipe, searchRecipes } from "@/server/recipes";
 import { createRecipeSchema, recipeSearchSchema } from "@/lib/validators";
 
@@ -11,6 +12,9 @@ export async function GET(request: NextRequest) {
       tags: searchParams.get("tags")?.split(",").filter(Boolean),
       diet: searchParams.get("diet") || undefined,
       maxTime: searchParams.get("maxTime") ? Number(searchParams.get("maxTime")) : undefined,
+      minServings: searchParams.get("minServings") ? Number(searchParams.get("minServings")) : undefined,
+      maxServings: searchParams.get("maxServings") ? Number(searchParams.get("maxServings")) : undefined,
+      maxCalories: searchParams.get("maxCalories") ? Number(searchParams.get("maxCalories")) : undefined,
       page: Number(searchParams.get("page")) || 1,
       limit: Number(searchParams.get("limit")) || 12,
     };
@@ -30,7 +34,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
+    const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

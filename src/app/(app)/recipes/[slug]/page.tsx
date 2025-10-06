@@ -1,19 +1,20 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RecipeMeta } from "@/components/recipe/recipe-meta";
 import { getRecipeBySlug } from "@/server/recipes";
 import { Step } from "@/types";
-import { ChefHat, Plus } from "lucide-react";
+import { ChefHat } from "lucide-react";
+import { RecipePageClient } from "./client";
 
 interface RecipePageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function RecipePage({ params }: RecipePageProps) {
-  const recipe = await getRecipeBySlug(params.slug);
+  const { slug } = await params;
+  const recipe = await getRecipeBySlug(slug);
 
   if (!recipe) {
     notFound();
@@ -45,7 +46,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             {recipe.title}
           </h1>
-          
+
           {recipe.summary && (
             <p className="text-lg text-gray-600 mb-4">
               {recipe.summary}
@@ -86,11 +87,8 @@ export default async function RecipePage({ params }: RecipePageProps) {
                 </div>
               ))}
             </div>
-            
-            <Button className="w-full mt-4" size="lg">
-              <Plus className="h-4 w-4 mr-2" />
-              Add to Shopping List
-            </Button>
+
+            <RecipePageClient recipe={recipe} />
           </div>
 
           {/* Instructions */}

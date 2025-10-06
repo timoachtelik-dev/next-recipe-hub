@@ -1,172 +1,265 @@
-"use client";
-
-import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { useState } from "react";
+import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Save } from "lucide-react";
+import { RecipeCard } from "@/components/recipe/recipe-card";
+import { getUserRecipes, getRecipeStats } from "@/server/recipes";
+import { getUserLists } from "@/server/lists";
+import { ChefHat, Plus, ShoppingCart, BookOpen, List } from "lucide-react";
 
-export default function DashboardPage() {
-  const { data: session, status } = useSession();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    title: "",
-    summary: "",
-    servings: 2,
-  });
+export default async function DashboardPage() {
+  const session = await getServerSession(authOptions);
 
-  if (status === "loading") {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded mb-4" />
-          <div className="h-64 bg-gray-200 rounded" />
-        </div>
-      </div>
-    );
+  if (!session?.user) {
+    redirect("/auth/signin?callbackUrl=/dashboard");
   }
 
-  if (!session) {
-    redirect("/api/auth/signin");
-  }
+  const userId = session.user.id;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      const response = await fetch("/api/recipes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          steps: [{ order: 1, text: "Add your cooking steps here" }],
-          items: [],
-          diets: [],
-          tags: [],
-        }),
-      });
-
-      if (response.ok) {
-        setFormData({ title: "", summary: "", servings: 2 });
-        // TODO: Show success message
-      } else {
-        // TODO: Show error message
-      }
-    } catch (error) {
-      console.error("Error creating recipe:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  // Fetch user data in parallel
+  const [recipes, stats, lists] = await Promise.all([
+    getUserRecipes(userId, 6),
+    getRecipeStats(userId),
+    getUserLists(userId),
+  ]);
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          Recipe Editor
-        </h1>
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome back, {session.user.name || "Chef"}! 👋
+          </h1>
+          <p className="text-gray-600">
+            Manage your recipes and shopping lists in one place.
+          </p>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Create New Recipe</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Basic Info */}
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Recipe Title *
-                  </label>
-                  <Input
-                    value={formData.title}
-                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                    placeholder="Enter recipe title"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Servings
-                  </label>
-                  <Input
-                    type="number"
-                    value={formData.servings}
-                    onChange={(e) => setFormData(prev => ({ ...prev, servings: Number(e.target.value) }))}
-                    min="1"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Summary
-                </label>
-                <textarea
-                  value={formData.summary}
-                  onChange={(e) => setFormData(prev => ({ ...prev, summary: e.target.value }))}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                  rows={3}
-                  placeholder="Brief description of the recipe"
-                />
-              </div>
-
-              {/* Placeholder for future form fields */}
-              <div className="text-center py-8 text-gray-500">
-                <p>More recipe fields coming soon...</p>
-                <p className="text-sm">For now, you can create a basic recipe with title and summary.</p>
-              </div>
-
-              {/* Submit */}
-              <div className="flex gap-4">
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="flex items-center gap-2"
-                >
-                  <Save className="h-4 w-4" />
-                  {isSubmitting ? "Creating..." : "Create Recipe"}
-                </Button>
-                <Button type="button" variant="outline">
-                  Save as Draft
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Placeholder for future features */}
-        <div className="mt-8 grid md:grid-cols-2 gap-6">
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
-            <CardHeader>
-              <CardTitle>My Recipes</CardTitle>
-            </CardHeader>
             <CardContent>
-              <p className="text-gray-600">
-                View and manage your created recipes.
-              </p>
-              <Button variant="outline" className="mt-4">
-                View Recipes
-              </Button>
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-orange-100 rounded-lg">
+                  <BookOpen className="h-6 w-6 text-orange-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.totalRecipes}
+                  </p>
+                  <p className="text-sm text-gray-600">Total Recipes</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle>Shopping Lists</CardTitle>
-            </CardHeader>
             <CardContent>
-              <p className="text-gray-600">
-                Create and manage your shopping lists.
-              </p>
-              <Button variant="outline" className="mt-4">
-                View Lists
-              </Button>
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-blue-100 rounded-lg">
+                  <ShoppingCart className="h-6 w-6 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {lists.length}
+                  </p>
+                  <p className="text-sm text-gray-600">Shopping Lists</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardContent>
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-green-100 rounded-lg">
+                  <ChefHat className="h-6 w-6 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {lists.reduce((acc, list) => acc + list.items.length, 0)}
+                  </p>
+                  <p className="text-sm text-gray-600">List Items</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <Plus className="h-5 w-5" />
+                Create New Recipe
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-orange-100 mb-4">
+                Share your culinary creations with the community.
+              </p>
+              <Link href="/dashboard/recipes/new">
+                <Button variant="secondary" className="bg-white text-orange-600 hover:bg-orange-50">
+                  Start Creating
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <Plus className="h-5 w-5" />
+                New Shopping List
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-blue-100 mb-4">
+                Organize your ingredients and plan your shopping.
+              </p>
+              <Link href="/lists/new">
+                <Button variant="secondary" className="bg-white text-blue-600 hover:bg-blue-50">
+                  Create List
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Recent Recipes */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Your Recent Recipes
+            </h2>
+            {recipes.length > 0 && (
+              <Link href="/recipes">
+                <Button variant="outline">View All</Button>
+              </Link>
+            )}
+          </div>
+
+          {recipes.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {recipes.map((recipe) => (
+                <RecipeCard key={recipe.id} recipe={recipe} />
+              ))}
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="p-12 text-center">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <BookOpen className="h-8 w-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  No recipes yet
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Start creating your first recipe to build your collection.
+                </p>
+                <Link href="/dashboard/recipes/new">
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create Your First Recipe
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
+        {/* Shopping Lists */}
+        <div>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Your Shopping Lists
+            </h2>
+            {lists.length > 0 && (
+              <Link href="/lists">
+                <Button variant="outline">View All</Button>
+              </Link>
+            )}
+          </div>
+
+          {lists.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {lists.slice(0, 3).map((list) => {
+                const totalItems = list.items.length;
+                const checkedItems = list.items.filter((item) => item.checked).length;
+                const progress = totalItems > 0 ? (checkedItems / totalItems) * 100 : 0;
+
+                return (
+                  <Link key={list.id} href={`/lists/${list.id}`}>
+                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <List className="h-5 w-5 text-blue-600" />
+                          {list.name}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-gray-600">
+                              {checkedItems} of {totalItems} items
+                            </span>
+                            <span className="font-semibold text-gray-900">
+                              {Math.round(progress)}%
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-blue-600 h-2 rounded-full transition-all"
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
+                          {list.items.slice(0, 3).map((item) => (
+                            <div
+                              key={item.id}
+                              className="text-sm text-gray-600 flex items-center gap-2"
+                            >
+                              <span className={item.checked ? "line-through" : ""}>
+                                {item.qty} {item.unit} {item.ingredient.name}
+                              </span>
+                            </div>
+                          ))}
+                          {totalItems > 3 && (
+                            <p className="text-xs text-gray-500">
+                              +{totalItems - 3} more items
+                            </p>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="p-12 text-center">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <ShoppingCart className="h-8 w-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  No shopping lists yet
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Create your first shopping list to organize your ingredients.
+                </p>
+                <Link href="/lists/new">
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create Your First List
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>

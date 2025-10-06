@@ -42,6 +42,9 @@ export const recipeSearchSchema = z.object({
   tags: z.array(z.string()).optional(),
   diet: z.string().optional(),
   maxTime: z.number().optional(),
+  minServings: z.number().optional(),
+  maxServings: z.number().optional(),
+  maxCalories: z.number().optional(),
   page: z.number().min(1).default(1),
   limit: z.number().min(1).max(50).default(12),
 });

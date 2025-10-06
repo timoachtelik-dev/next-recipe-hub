@@ -72,7 +72,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
       
       <CardFooter className="p-4 pt-0">
         <Link 
-          href={`/app/recipes/${recipe.slug}`}
+          href={`/recipes/${recipe.slug}`}
           className="w-full text-center py-2 px-4 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
         >
           View Recipe
