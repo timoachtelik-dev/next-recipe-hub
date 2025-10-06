@@ -17,8 +17,22 @@ describe("Ingredients Service", () => {
 
   it("should search ingredients by name", async () => {
     const mockIngredients = [
-      { id: "tomato", name: "Tomato", aliases: [] },
-      { id: "cherry-tomato", name: "Cherry Tomato", aliases: [] },
+      { 
+        id: "tomato", 
+        name: "Tomato", 
+        category: "vegetable",
+        kcalPer100g: 18,
+        macros: { protein: 0.9, carbs: 3.9, fat: 0.2 } as any,
+        aliases: [] 
+      },
+      { 
+        id: "cherry-tomato", 
+        name: "Cherry Tomato", 
+        category: "vegetable",
+        kcalPer100g: 18,
+        macros: { protein: 0.9, carbs: 3.9, fat: 0.2 } as any,
+        aliases: [] 
+      },
     ];
     
     const { prisma } = await import("@/lib/db");
