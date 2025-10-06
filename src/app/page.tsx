@@ -4,6 +4,9 @@ import { SearchBar } from "@/components/search/search-bar";
 import { RecipeCard } from "@/components/recipe/recipe-card";
 import { searchRecipes } from "@/server/recipes";
 
+// Force dynamic rendering to avoid build-time database calls
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   // Fetch featured recipes (latest 3)
   const { recipes } = await searchRecipes({

@@ -8,6 +8,9 @@ import { searchRecipes } from "@/server/recipes";
 import { recipeSearchSchema } from "@/lib/validators";
 import type { RecipeWithDetails } from "@/types";
 
+// Force dynamic rendering to avoid build-time database calls
+export const dynamic = 'force-dynamic';
+
 interface HomePageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }

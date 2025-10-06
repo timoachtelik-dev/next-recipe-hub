@@ -9,6 +9,9 @@ import { getUserRecipes, getRecipeStats } from "@/server/recipes";
 import { getUserLists } from "@/server/lists";
 import { ChefHat, Plus, ShoppingCart, BookOpen, List } from "lucide-react";
 
+// Force dynamic rendering to avoid build-time database calls
+export const dynamic = 'force-dynamic';
+
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
 

@@ -9,6 +9,9 @@ type RecipeItemWithIngredient = RecipeWithDetails['items'][0];
 import { ChefHat } from "lucide-react";
 import { RecipePageClient } from "./client";
 
+// Force dynamic rendering to avoid build-time database calls
+export const dynamic = 'force-dynamic';
+
 interface RecipePageProps {
   params: Promise<{ slug: string }>;
 }
