@@ -36,7 +36,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <h1 className="text-3xl font-bold text-gray-900 mb-4">
           Discover Amazing Recipes
         </h1>
-        <SearchBar />
+        <Suspense fallback={<div className="h-12 bg-gray-200 rounded animate-pulse" />}>
+          <SearchBar />
+        </Suspense>
       </div>
 
       <Suspense fallback={<RecipeGridSkeleton />}>

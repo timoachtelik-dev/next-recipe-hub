@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Filter } from "lucide-react";
 import { FilterPanel } from "./filter-panel";
 
-export function SearchBar() {
+function SearchBarContent() {
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("q") || "");
   const [showFilters, setShowFilters] = useState(false);
@@ -58,5 +58,13 @@ export function SearchBar() {
         }}
       />
     </div>
+  );
+}
+
+export function SearchBar() {
+  return (
+    <Suspense fallback={<div className="h-12 bg-gray-200 rounded animate-pulse" />}>
+      <SearchBarContent />
+    </Suspense>
   );
 }

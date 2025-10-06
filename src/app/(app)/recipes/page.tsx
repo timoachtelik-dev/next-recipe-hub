@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { RecipeCard } from "@/components/recipe/recipe-card";
 import { RecipeListView } from "@/components/recipe/recipe-list-view";
@@ -13,7 +13,7 @@ import { RecipeWithDetails } from "@/types";
 
 const RECIPES_PER_PAGE = 24;
 
-export default function RecipesPage() {
+function RecipesPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -391,6 +391,27 @@ export default function RecipesPage() {
         initialFilters={filters}
       />
     </div>
+  );
+}
+
+export default function RecipesPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="animate-pulse">
+            <div className="h-10 bg-gray-200 rounded w-64 mb-8" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-64 bg-gray-200 rounded" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    }>
+      <RecipesPageContent />
+    </Suspense>
   );
 }
 
