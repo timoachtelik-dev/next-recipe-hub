@@ -120,7 +120,7 @@ export function NavbarSearch() {
     }
   };
 
-  const handleResultClick = (slug: string) => {
+  const handleResultClick = () => {
     setIsOpen(false);
     setQuery("");
   };
@@ -171,12 +171,12 @@ export function NavbarSearch() {
               {/* View All Results Link */}
               <Link
                 href={`/recipes?q=${encodeURIComponent(query)}`}
-                onClick={() => handleResultClick("")}
+                onClick={() => handleResultClick()}
                 className={`block p-3 text-center text-sm font-medium text-orange-600 hover:bg-orange-50 transition-colors border-t border-gray-100 ${
                   selectedIndex === results.length ? "bg-orange-50" : ""
                 }`}
               >
-                View all results for "{query}"
+                View all results for &quot;{query}&quot;
               </Link>
             </>
           )}

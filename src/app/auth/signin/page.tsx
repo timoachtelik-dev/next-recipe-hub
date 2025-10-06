@@ -34,7 +34,7 @@ export default function SignInPage() {
       } else {
         setEmailSent(true);
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -51,7 +51,7 @@ export default function SignInPage() {
             </div>
             <CardTitle className="text-2xl">Check your email</CardTitle>
             <CardDescription>
-              We've sent a magic link to <strong>{email}</strong>
+              We&apos;ve sent a magic link to <strong>{email}</strong>
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -143,8 +143,8 @@ export default function SignInPage() {
 
             <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
               <p className="text-sm text-blue-800">
-                <strong>How it works:</strong> We'll send you a secure sign-in link to your email. 
-                No password needed! If you don't have an account yet, we'll create one for you automatically.
+                <strong>How it works:</strong> We&apos;ll send you a secure sign-in link to your email. 
+                No password needed! If you don&apos;t have an account yet, we&apos;ll create one for you automatically.
               </p>
             </div>
           </CardContent>

@@ -24,7 +24,7 @@ export async function createIngredient(data: {
   name: string;
   category?: string;
   kcalPer100g?: number;
-  macros?: any;
+  macros?: Record<string, unknown>;
   aliases?: string[];
 }) {
   return await prisma.ingredient.create({

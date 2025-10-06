@@ -3,7 +3,9 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { RecipeMeta } from "@/components/recipe/recipe-meta";
 import { getRecipeBySlug } from "@/server/recipes";
-import { Step } from "@/types";
+import { Step, RecipeWithDetails } from "@/types";
+
+type RecipeItemWithIngredient = RecipeWithDetails['items'][0];
 import { ChefHat } from "lucide-react";
 import { RecipePageClient } from "./client";
 
@@ -73,7 +75,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
           <div className="lg:col-span-1">
             <h2 className="text-2xl font-semibold mb-4">Ingredients</h2>
             <div className="space-y-3">
-              {recipe.items.map((item: any) => (
+              {recipe.items.map((item: RecipeItemWithIngredient) => (
                 <div key={item.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-medium">
                     {item.qty} {item.unit} {item.ingredient.name}

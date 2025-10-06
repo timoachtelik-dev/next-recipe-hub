@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { createList, getUserLists } from "@/server/lists";
 import { createListSchema } from "@/lib/validators";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {

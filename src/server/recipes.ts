@@ -74,7 +74,7 @@ export async function getRecipeBySlug(slug: string) {
 }
 
 export async function updateRecipe(id: string, data: UpdateRecipeInput) {
-  const updateData: any = { ...data };
+  const updateData: Record<string, unknown> = { ...data };
   
   if (data.title) {
     updateData.slug = data.title
@@ -108,8 +108,8 @@ export async function searchRecipes(params: RecipeSearchInput) {
   const { q, tags, diet, maxTime, minServings, maxServings, maxCalories, page, limit } = params;
   const skip = (page - 1) * limit;
 
-  const where: any = {};
-  const andConditions: any[] = [];
+  const where: Record<string, unknown> = {};
+  const andConditions: Record<string, unknown>[] = [];
 
   // Search query - use OR for title/summary/tags
   if (q) {

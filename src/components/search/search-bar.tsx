@@ -8,7 +8,6 @@ import { Search, Filter } from "lucide-react";
 import { FilterPanel } from "./filter-panel";
 
 export function SearchBar() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("q") || "");
   const [showFilters, setShowFilters] = useState(false);
@@ -50,7 +49,7 @@ export function SearchBar() {
       <FilterPanel 
         open={showFilters} 
         onOpenChange={setShowFilters}
-        onApplyFilters={(filters) => {
+        onApplyFilters={() => {
           // Scroll to recipes section when filters are applied
           const element = document.getElementById('recipes');
           if (element) {

@@ -96,7 +96,7 @@ export function AddToShoppingListDialog({
             Add to Shopping List
           </DialogTitle>
           <DialogDescription>
-            Add ingredients from "{recipeTitle}" to your shopping list
+            Add ingredients from &quot;{recipeTitle}&quot; to your shopping list
           </DialogDescription>
         </DialogHeader>
 
