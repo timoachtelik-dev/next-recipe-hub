@@ -99,6 +99,15 @@ export async function updateRecipe(id: string, data: UpdateRecipeInput) {
 }
 
 export async function deleteRecipe(id: string) {
+  // Delete related records first to avoid foreign key constraints
+  await prisma.recipeItem.deleteMany({
+    where: { recipeId: id },
+  });
+  
+  await prisma.nutrition.deleteMany({
+    where: { recipeId: id },
+  });
+  
   return await prisma.recipe.delete({
     where: { id },
   });

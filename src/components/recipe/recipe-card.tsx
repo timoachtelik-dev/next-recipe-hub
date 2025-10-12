@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { SafeImage } from "@/components/ui/safe-image";
 import { Clock, Zap } from "lucide-react";
 import { RecipeWithDetails } from "@/types";
 
@@ -16,18 +16,17 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       <div className="aspect-video relative bg-gray-100">
-        {recipe.heroImage ? (
-          <Image
-            src={recipe.heroImage}
-            alt={recipe.title}
-            fill
-            className="object-cover"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full text-gray-400">
-            [Image]
-          </div>
-        )}
+        <SafeImage
+          src={recipe.heroImage}
+          alt={recipe.title}
+          fill
+          className="object-cover"
+          placeholder={
+            <div className="flex items-center justify-center h-full text-gray-400">
+              [Image]
+            </div>
+          }
+        />
       </div>
       
       <CardContent className="p-4">

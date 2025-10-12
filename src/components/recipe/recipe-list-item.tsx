@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SafeImage } from "@/components/ui/safe-image";
 import { Clock, Users, Zap, ChefHat, ArrowRight } from "lucide-react";
 import { RecipeWithDetails } from "@/types";
 
@@ -36,18 +36,17 @@ export function RecipeListItem({ recipe, variant = "default", onItemClick, isSel
         }`}
       >
         <div className="w-20 h-20 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden relative">
-          {recipe.heroImage ? (
-            <Image
-              src={recipe.heroImage}
-              alt={recipe.title}
-              fill
-              className="object-cover"
-            />
-          ) : (
-            <div className="flex items-center justify-center h-full">
-              <ChefHat className="h-8 w-8 text-gray-300" />
-            </div>
-          )}
+          <SafeImage
+            src={recipe.heroImage}
+            alt={recipe.title}
+            fill
+            className="object-cover"
+            placeholder={
+              <div className="flex items-center justify-center h-full">
+                <ChefHat className="h-8 w-8 text-gray-300" />
+              </div>
+            }
+          />
         </div>
         
         <div className="flex-1 min-w-0 relative">
@@ -88,18 +87,17 @@ export function RecipeListItem({ recipe, variant = "default", onItemClick, isSel
       <div className="flex flex-col md:flex-row">
         {/* Image Section */}
         <div className="md:w-64 h-48 md:h-auto relative bg-gray-100 flex-shrink-0">
-          {recipe.heroImage ? (
-            <Image
-              src={recipe.heroImage}
-              alt={recipe.title}
-              fill
-              className="object-cover"
-            />
-          ) : (
-            <div className="flex items-center justify-center h-full text-gray-400">
-              <ChefHat className="h-16 w-16" />
-            </div>
-          )}
+          <SafeImage
+            src={recipe.heroImage}
+            alt={recipe.title}
+            fill
+            className="object-cover"
+            placeholder={
+              <div className="flex items-center justify-center h-full text-gray-400">
+                <ChefHat className="h-16 w-16" />
+              </div>
+            }
+          />
         </div>
 
         {/* Content Section */}

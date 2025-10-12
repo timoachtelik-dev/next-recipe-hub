@@ -5,7 +5,13 @@ import { ingredientAutocompleteSchema } from "@/lib/validators";
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const query = searchParams.get("q") || "";
+    const query = searchParams.get("q");
+    
+    // If no query provided, return all ingredients (for dropdown)
+    if (!query) {
+      const ingredients = await searchIngredients("");
+      return NextResponse.json(ingredients);
+    }
     
     const validatedParams = ingredientAutocompleteSchema.parse({ q: query });
     const ingredients = await searchIngredients(validatedParams.q);

@@ -9,6 +9,7 @@ import { getUserRecipes, getRecipeStats } from "@/server/recipes";
 import { getUserLists } from "@/server/lists";
 import { ChefHat, Plus, ShoppingCart, BookOpen, List } from "lucide-react";
 
+
 // Force dynamic rendering to avoid build-time database calls
 export const dynamic = 'force-dynamic';
 
@@ -33,12 +34,16 @@ export default async function DashboardPage() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, {session.user.name || "Chef"}! 👋
-          </h1>
-          <p className="text-gray-600">
-            Manage your recipes and shopping lists in one place.
-          </p>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                Welcome back, {session.user.name || "Chef"}! 👋
+              </h1>
+              <p className="text-gray-600">
+                Manage your recipes and shopping lists in one place.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Quick Stats */}
@@ -105,11 +110,16 @@ export default async function DashboardPage() {
               <p className="text-orange-100 mb-4">
                 Share your culinary creations with the community.
               </p>
-              <Link href="/dashboard/recipes/new">
-                <Button variant="secondary" className="bg-white text-orange-600 hover:bg-orange-50">
-                  Start Creating
-                </Button>
-              </Link>
+              <Button
+                asChild
+                size="lg"
+                className="bg-white text-orange-600 hover:bg-gray-100 font-semibold"
+              >
+                <Link href="/recipes/new">
+                  <Plus className="h-5 w-5 mr-2" />
+                  Create Recipe
+                </Link>
+              </Button>
             </CardContent>
           </Card>
 

@@ -8,7 +8,7 @@ import { FilterPanel, FilterState } from "@/components/search/filter-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Filter, ChevronLeft, ChevronRight, Loader2, Grid3x3, List } from "lucide-react";
+import { Search, Filter, ChevronLeft, ChevronRight, Loader2, Grid3x3, List, Plus } from "lucide-react";
 import { RecipeWithDetails } from "@/types";
 
 const RECIPES_PER_PAGE = 24;
@@ -138,9 +138,19 @@ function RecipesPageContent() {
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Discover Recipes
           </h1>
-          <p className="text-lg text-orange-100 mb-8">
-            Browse through our collection of delicious recipes from the community
-          </p>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+            <p className="text-lg text-orange-100">
+              Browse through our collection of delicious recipes from the community
+            </p>
+            <Button
+              onClick={() => router.push("/recipes/new")}
+              size="lg"
+              className="bg-white text-orange-600 hover:bg-gray-100 font-semibold"
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              Create Recipe
+            </Button>
+          </div>
 
           {/* Search Bar */}
           <div className="flex gap-3 max-w-3xl">
