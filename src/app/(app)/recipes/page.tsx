@@ -131,21 +131,21 @@ function RecipesPageContent() {
     (filters.maxCalories > 0 ? 1 : 0);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-orange-600 to-orange-700 text-white py-12">
+      <div className="bg-cornsilk text-gray-900 py-12">
         <div className="container mx-auto px-4">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Discover Recipes
           </h1>
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
-            <p className="text-lg text-orange-100">
+            <p className="text-lg text-gray-700">
               Browse through our collection of delicious recipes from the community
             </p>
             <Button
+              variant="primary"
               onClick={() => router.push("/recipes/new")}
               size="lg"
-              className="bg-white text-orange-600 hover:bg-gray-100 font-semibold"
             >
               <Plus className="h-5 w-5 mr-2" />
               Create Recipe
@@ -166,9 +166,9 @@ function RecipesPageContent() {
             </div>
             <Button 
               onClick={() => setShowFilters(true)}
-              variant="secondary"
+              variant="outline"
               size="lg"
-              className="h-12 px-6 bg-white text-orange-600 hover:bg-gray-100"
+              className="h-12 px-6"
             >
               <Filter className="h-5 w-5 mr-2" />
               Filters
@@ -253,7 +253,7 @@ function RecipesPageContent() {
             )}
             <div className="flex items-center gap-2 border rounded-lg p-1">
               <Button
-                variant={viewMode === "grid" ? "default" : "ghost"}
+                variant={viewMode === "grid" ? "primary" : "outline"}
                 size="sm"
                 onClick={() => setViewMode("grid")}
                 className="h-8 px-3"
@@ -262,7 +262,7 @@ function RecipesPageContent() {
                 <span className="ml-2 hidden sm:inline">Grid</span>
               </Button>
               <Button
-                variant={viewMode === "list" ? "default" : "ghost"}
+                variant={viewMode === "list" ? "primary" : "outline"}
                 size="sm"
                 onClick={() => setViewMode("list")}
                 className="h-8 px-3"
@@ -372,7 +372,7 @@ function RecipesPageContent() {
                 return (
                   <Button
                     key={i}
-                    variant={currentPage === pageNum ? "default" : "outline"}
+                    variant={currentPage === pageNum ? "primary" : "outline"}
                     onClick={() => setCurrentPage(pageNum)}
                     className="w-10"
                   >

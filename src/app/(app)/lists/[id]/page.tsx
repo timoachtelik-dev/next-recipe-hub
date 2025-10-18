@@ -172,10 +172,10 @@ export default function ListPage() {
                 autoFocus
               />
               <Button
+                variant="secondary"
                 size="sm"
                 onClick={handleSaveEdit}
                 disabled={!editedName.trim() || updateListNameMutation.isPending}
-                className="bg-green-600 hover:bg-green-700"
               >
                 <Check className="h-4 w-4" />
               </Button>
@@ -195,9 +195,8 @@ export default function ListPage() {
               </h1>
               <Button
                 size="sm"
-                variant="ghost"
+                variant="outline"
                 onClick={handleStartEdit}
-                className="text-gray-500 hover:text-gray-700"
                 aria-label="Edit list name"
               >
                 <Pencil className="h-4 w-4" />
@@ -219,7 +218,8 @@ export default function ListPage() {
             }}
             disabled={isAddingItem}
           />
-          <Button 
+          <Button
+            variant="secondary"
             onClick={handleAddItem}
             disabled={!newItem.trim() || isAddingItem}
           >

@@ -3,7 +3,9 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SafeImage } from "@/components/ui/safe-image";
 import { Clock, Zap } from "lucide-react";
-import { RecipeWithDetails } from "@/types";
+import { RecipeWithDetails, NutritionData } from "@/types";
+import { getNutritionBadges } from "@/lib/nutrition-badges";
+import { NutritionBadges } from "@/components/nutrition/nutrition-badges";
 
 interface RecipeCardProps {
   recipe: RecipeWithDetails;
@@ -12,6 +14,14 @@ interface RecipeCardProps {
 export function RecipeCard({ recipe }: RecipeCardProps) {
   const totalTime = (recipe.prepMinutes || 0) + (recipe.cookMinutes || 0);
   const calories = recipe.nutrition?.kcal || 0;
+
+  // Get nutrition badges if nutrition data is available
+  const nutritionBadges = recipe.nutrition
+    ? getNutritionBadges(
+        recipe.nutrition as NutritionData,
+        recipe.diets
+      )
+    : [];
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
@@ -52,6 +62,12 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
             </Badge>
           )}
         </div>
+
+        {nutritionBadges.length > 0 && (
+          <div className="mb-3">
+            <NutritionBadges badges={nutritionBadges} maxBadges={3} />
+          </div>
+        )}
         
         <div className="flex items-center gap-4 text-sm text-gray-600">
           {totalTime > 0 && (

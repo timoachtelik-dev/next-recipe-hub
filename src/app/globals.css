@@ -1,6 +1,79 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Global page background */
+body {
+  background-color: #fef8ec; /* floral white - warm, light, neutral earth tone */
+}
+
+@theme {
+  /* Base colors */
+  --color-white: #fff;
+  --color-black: #000;
+  
+  /* Custom earth-tone palette */
+  --color-tea-green: #ccd5ae;
+  --color-tea-green-dark: #b5bf93;
+  --color-beige: #e9edc9;
+  --color-beige-dark: #dae0b0;
+  --color-floral-white: #fef8ec;
+  --color-floral-white-dark: #fdf4e4;
+  --color-old-lace: #fef3e0;
+  --color-old-lace-dark: #fdf0d5;
+  --color-papaya-whip: #faedcd;
+  --color-papaya-whip-dark: #f7e3b3;
+  --color-peach: #f7e2ae;
+  --color-peach-dark: #f5d48c;
+  --color-buff: #d4a373;
+  --color-buff-dark: #c49260;
+  
+  /* Semantic button colors - using direct hex values */
+  --color-primary: #ccd5ae;
+  --color-primary-hover: #b5bf93;
+  --color-secondary: #e9edc9;
+  --color-secondary-hover: #dae0b0;
+  --color-destructive: #c7184a;
+  --color-destructive-hover: #a4133c;
+  --color-outline: #d4a373;
+  --color-outline-hover: #c49260;
+  --color-link: #faedcd;
+  --color-link-hover: #f7e3b3;
+  
+  /* Gray scale for text and borders */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  
+  /* Utility colors */
+  --color-red-50: #fef2f2;
+  --color-red-100: #fee2e2;
+  --color-red-200: #fecaca;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+  --color-red-700: #b91c1c;
+  --color-green-50: #f0fdf4;
+  --color-green-100: #dcfce7;
+  --color-green-600: #16a34a;
+  --color-green-700: #15803d;
+  --color-green-800: #166534;
+  --color-blue-50: #eff6ff;
+  --color-blue-100: #dbeafe;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-orange-50: #fff7ed;
+  --color-orange-100: #ffedd5;
+  --color-orange-500: #f97316;
+  --color-orange-600: #ea580c;
+  --color-orange-700: #c2410c;
+}
+
 /* Print Styles for Recipe Pages */
 @media print {
   /* Hide navigation, buttons, and interactive elements */

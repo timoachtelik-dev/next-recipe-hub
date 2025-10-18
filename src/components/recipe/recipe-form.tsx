@@ -21,6 +21,27 @@ interface RecipeFormProps {
   submitLabel?: string;
 }
 
+// Delete button component for removing items
+function DeleteButton({ 
+  onClick, 
+  disabled 
+}: { 
+  onClick: () => void; 
+  disabled: boolean;
+}) {
+  return (
+    <Button
+      type="button"
+      variant="destructive"
+      size="sm"
+      onClick={onClick}
+      disabled={disabled}
+    >
+      <X className="size-4" />
+    </Button>
+  );
+}
+
 export function RecipeForm({ 
   initialData, 
   onSubmit, 
@@ -190,7 +211,7 @@ export function RecipeForm({
                 Basic Information
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 pt-6">
+            <CardContent>
               <div>
                 <label className="block text-sm font-medium mb-2">Recipe Title *</label>
                 <Input
@@ -238,7 +259,7 @@ export function RecipeForm({
                 Cooking Information
               </CardTitle>
             </CardHeader>
-            <CardContent className="pt-6">
+            <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">Prep Time (min)</label>
@@ -293,31 +314,23 @@ export function RecipeForm({
                 Ingredients
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 pt-6">
-              <div className="space-y-3">
-                {ingredientInputs.map((input, index) => (
-                  <div key={index} className="flex items-start gap-2">
-                    <div className="flex-1">
-                      <IngredientAutocomplete
-                        value={input}
-                        onChange={(value) => handleIngredientChange(index, value)}
-                        placeholder="e.g., '2 cups flour' or '1 tsp salt'"
-                        showParsedPreview={true}
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeIngredient(index)}
-                      disabled={ingredientInputs.length === 1}
-                      className="text-red-500 hover:text-red-500-foreground hover:bg-red-500"
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
+            <CardContent>
+              {ingredientInputs.map((input, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <div className="flex-1">
+                    <IngredientAutocomplete
+                      value={input}
+                      onChange={(value) => handleIngredientChange(index, value)}
+                      placeholder="e.g., '2 cups flour' or '1 tsp salt'"
+                      showParsedPreview={true}
+                    />
                   </div>
-                ))}
-              </div>
+                  <DeleteButton
+                    onClick={() => removeIngredient(index)}
+                    disabled={ingredientInputs.length === 1}
+                  />
+                </div>
+              ))}
 
               <Button
                 type="button"
@@ -342,42 +355,34 @@ export function RecipeForm({
           <Card className="recipe-card">
             <CardHeader className="bg-green-50">
               <CardTitle className="flex items-center gap-2 text-green-700">
-                <ChefHat className="h-5 w-5" />
+                <ChefHat className="size-5" />
                 Instructions
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 pt-6">
-              <div className="space-y-4">
-                {stepFields.map((field, index) => (
-                  <div key={field.id} className="space-y-3 p-4 border border-gray-200 rounded-lg bg-green-50/50">
-                    <div className="flex justify-between items-center">
-                      <h4 className="font-medium text-gray-900">Step {index + 1}</h4>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeStep(index)}
-                        disabled={stepFields.length === 1}
-                        className="text-red-500 hover:text-red-500-foreground hover:bg-red-500"
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-
-                    <textarea
-                      {...register(`steps.${index}.text`)}
-                      placeholder="Describe this step..."
-                      rows={3}
-                      className={`w-full p-3 border rounded-md focus:ring-2 focus:ring-gray-300 focus:border-gray-300 bg-transparent resize-none ${
-                        errors.steps?.[index]?.text ? "border-red-500" : "border-gray-200"
-                      }`}
+            <CardContent>
+              {stepFields.map((field, index) => (
+                <div key={field.id} className="space-y-3 p-4 border border-gray-200 rounded-lg bg-green-50/50">
+                  <div className="flex justify-between items-center">
+                    <h4 className="font-medium text-gray-900">Step {index + 1}</h4>
+                    <DeleteButton
+                      onClick={() => removeStep(index)}
+                      disabled={stepFields.length === 1}
                     />
-                    {errors.steps?.[index]?.text && (
-                        <p className="text-sm text-red-500">{errors.steps[index]?.text?.message}</p>
-                    )}
                   </div>
-                ))}
-              </div>
+
+                  <textarea
+                    {...register(`steps.${index}.text`)}
+                    placeholder="Describe this step..."
+                    rows={3}
+                    className={`w-full p-3 border rounded-md focus:ring-2 focus:ring-gray-300 focus:border-gray-300 bg-transparent resize-none ${
+                      errors.steps?.[index]?.text ? "border-red-500" : "border-gray-200"
+                    }`}
+                  />
+                  {errors.steps?.[index]?.text && (
+                      <p className="text-sm text-red-500">{errors.steps[index]?.text?.message}</p>
+                  )}
+                </div>
+              ))}
 
               <Button
                 type="button"
@@ -403,7 +408,7 @@ export function RecipeForm({
                 Tags & Dietary Information
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6 pt-6">
+            <CardContent>
               <div>
                 <label className="block text-sm font-medium mb-3">Tags</label>
                 <div className="flex flex-wrap gap-2 mb-3">
@@ -466,6 +471,7 @@ export function RecipeForm({
           type="submit" 
           disabled={isSubmitting} 
           size="lg"
+          variant="primary"
           className="min-w-48 shadow-lg"
         >
           {isSubmitting ? (

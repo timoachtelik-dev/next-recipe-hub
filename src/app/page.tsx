@@ -14,7 +14,7 @@ export default async function HomePage() {
     limit: 3,
   });
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-16">
         <div className="text-center">
           <h1 className="text-6xl font-bold text-gray-900 mb-6">
@@ -25,7 +25,7 @@ export default async function HomePage() {
             and never forget a great meal again.
           </p>
           <div className="flex gap-4 justify-center">
-            <Button asChild size="lg">
+            <Button variant="primary" asChild size="lg">
               <Link href="/auth/signin">Get Started</Link>
             </Button>
           </div>
@@ -81,7 +81,7 @@ export default async function HomePage() {
                 ))}
               </div>
               <div className="text-center">
-                <Button asChild size="lg">
+                <Button variant="primary" asChild size="lg">
                   <Link href="/auth/signin?callbackUrl=/app">View All Recipes</Link>
                 </Button>
               </div>
@@ -91,7 +91,7 @@ export default async function HomePage() {
               <p className="text-gray-600 mb-6">
                 No recipes available yet. Be the first to create one!
               </p>
-              <Button asChild size="lg">
+              <Button variant="primary" asChild size="lg">
                 <Link href="/auth/signin?callbackUrl=/dashboard">Create Recipe</Link>
               </Button>
             </div>

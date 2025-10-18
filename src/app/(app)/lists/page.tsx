@@ -228,7 +228,7 @@ export default function ListsPage() {
 
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-orange-600 hover:bg-orange-700">
+              <Button variant="secondary">
                 <Plus className="h-4 w-4 mr-2" />
                 New List
               </Button>
@@ -264,9 +264,9 @@ export default function ListsPage() {
                   Cancel
                 </Button>
                 <Button
+                  variant="secondary"
                   onClick={handleCreateList}
                   disabled={!newListName.trim() || createListMutation.isPending}
-                  className="bg-orange-600 hover:bg-orange-700"
                 >
                   {createListMutation.isPending ? "Creating..." : "Create List"}
                 </Button>
@@ -424,7 +424,7 @@ function ListCard({ list, onDelete, onDuplicate, onView }: ListCardProps) {
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <Button variant="outline" size="sm" className="h-8 w-8 p-0">
                   <MoreVertical className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -484,8 +484,9 @@ function ListCard({ list, onDelete, onDuplicate, onView }: ListCardProps) {
 
         <CardFooter>
           <Button
+            variant="secondary"
             onClick={onView}
-            className="w-full bg-orange-600 hover:bg-orange-700"
+            className="w-full"
             size="sm"
           >
             <Eye className="h-4 w-4 mr-2" />
@@ -540,8 +541,8 @@ function EmptyState({ onCreateList }: { onCreateList: () => void }) {
         Create your first shopping list to start organizing your groceries and ingredients.
       </p>
       <Button
+        variant="secondary"
         onClick={onCreateList}
-        className="bg-orange-600 hover:bg-orange-700"
       >
         <Plus className="h-4 w-4 mr-2" />
         Create Your First List
@@ -563,7 +564,7 @@ function EmptySearchState({ onClearSearch }: { onClearSearch: () => void }) {
       <p className="text-gray-600 mb-6">
         No shopping lists match your search criteria.
       </p>
-      <Button onClick={onClearSearch} variant="outline">
+      <Button onClick={onClearSearch} variant="link">
         Clear Search
       </Button>
     </div>

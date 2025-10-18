@@ -49,7 +49,7 @@ export default async function DashboardPage() {
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
-            <CardContent>
+            <CardContent className="pt-6">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-orange-100 rounded-lg">
                   <BookOpen className="h-6 w-6 text-orange-600" />
@@ -65,7 +65,7 @@ export default async function DashboardPage() {
           </Card>
 
           <Card>
-            <CardContent>
+            <CardContent className="pt-6">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-blue-100 rounded-lg">
                   <ShoppingCart className="h-6 w-6 text-blue-600" />
@@ -81,7 +81,7 @@ export default async function DashboardPage() {
           </Card>
 
           <Card>
-            <CardContent>
+            <CardContent className="pt-6">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-green-100 rounded-lg">
                   <ChefHat className="h-6 w-6 text-green-600" />
@@ -101,7 +101,7 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
+              <CardTitle className="flex items-center gap-2 text-white text-rose">
                 <Plus className="h-5 w-5" />
                 Create New Recipe
               </CardTitle>
@@ -113,7 +113,7 @@ export default async function DashboardPage() {
               <Button
                 asChild
                 size="lg"
-                className="bg-white text-orange-600 hover:bg-gray-100 font-semibold"
+                variant="primary"
               >
                 <Link href="/recipes/new">
                   <Plus className="h-5 w-5 mr-2" />
@@ -135,7 +135,7 @@ export default async function DashboardPage() {
                 Organize your ingredients and plan your shopping.
               </p>
               <Link href="/lists/new">
-                <Button variant="secondary" className="bg-white text-blue-600 hover:bg-blue-50">
+                <Button variant="secondary">
                   Create List
                 </Button>
               </Link>
@@ -151,7 +151,7 @@ export default async function DashboardPage() {
             </h2>
             {recipes.length > 0 && (
               <Link href="/recipes">
-                <Button variant="outline">View All</Button>
+                <Button variant="link">View All</Button>
               </Link>
             )}
           </div>
@@ -175,7 +175,7 @@ export default async function DashboardPage() {
                   Start creating your first recipe to build your collection.
                 </p>
                 <Link href="/dashboard/recipes/new">
-                  <Button>
+                  <Button variant="primary">
                     <Plus className="h-4 w-4 mr-2" />
                     Create Your First Recipe
                   </Button>
@@ -193,7 +193,7 @@ export default async function DashboardPage() {
             </h2>
             {lists.length > 0 && (
               <Link href="/lists">
-                <Button variant="outline">View All</Button>
+                <Button variant="link">View All</Button>
               </Link>
             )}
           </div>
@@ -265,7 +265,7 @@ export default async function DashboardPage() {
                   Create your first shopping list to organize your ingredients.
                 </p>
                 <Link href="/lists/new">
-                  <Button>
+                  <Button variant="secondary">
                     <Plus className="h-4 w-4 mr-2" />
                     Create Your First List
                   </Button>

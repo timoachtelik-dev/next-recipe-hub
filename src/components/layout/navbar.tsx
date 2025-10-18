@@ -30,12 +30,12 @@ export function Navbar() {
             {session && (
               <nav className="flex items-center gap-2">
                 <Link href="/recipes">
-                  <Button variant="ghost" size="sm">
+                  <Button variant="link" size="sm">
                     Recipes
                   </Button>
                 </Link>
                 <Link href="/lists">
-                  <Button variant="ghost" size="sm">
+                  <Button variant="link" size="sm">
                     <ShoppingCart className="h-4 w-4 mr-1" />
                     Lists
                   </Button>
@@ -54,7 +54,7 @@ export function Navbar() {
                 </Button>
               </div>
             ) : (
-              <Button variant="outline" size="sm" onClick={() => signIn()}>
+              <Button variant="primary" size="sm" onClick={() => signIn()}>
                 Sign in
               </Button>
             )}

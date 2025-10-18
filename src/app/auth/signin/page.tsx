@@ -43,7 +43,7 @@ function SignInForm() {
 
   if (emailSent) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center p-4">
+      <div className="min-h-screen  flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -69,7 +69,7 @@ function SignInForm() {
               Use a different email
             </Button>
             <Link href="/" className="block">
-              <Button variant="ghost" className="w-full">
+              <Button variant="link" className="w-full">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to home
               </Button>
@@ -81,7 +81,7 @@ function SignInForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <Link href="/" className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-6">
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -157,7 +157,7 @@ function SignInForm() {
 export default function SignInPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <div className="text-4xl font-bold text-orange-600 mb-2">

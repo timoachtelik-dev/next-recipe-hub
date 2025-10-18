@@ -20,7 +20,7 @@ import { toast } from "sonner";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
-import type { RecipeWithDetails } from "@/types";
+import type { RecipeWithDetails, Step } from "@/types";
 
 interface RecipePageClientProps {
   recipe: RecipeWithDetails;
@@ -119,7 +119,7 @@ export function RecipePageClient({ recipe }: RecipePageClientProps) {
         throw new Error('Recipe content not found');
       }
 
-      // Create a temporary container with simplified styling for PDF generation
+      // Create a completely isolated container for PDF generation
       const tempContainer = document.createElement('div');
       tempContainer.style.cssText = `
         position: fixed;
@@ -131,71 +131,14 @@ export function RecipePageClient({ recipe }: RecipePageClientProps) {
         font-family: Arial, sans-serif;
         padding: 20px;
         box-sizing: border-box;
-      `;
-
-      // Clone the content and simplify styling
-      const clonedContent = element.cloneNode(true) as HTMLElement;
-      
-      // Remove problematic CSS classes and inline styles
-      const removeProblematicStyles = (el: HTMLElement) => {
-        // Remove all classes that might contain lab() colors
-        el.removeAttribute('class');
-        
-        // Simplify inline styles
-        if (el.style) {
-          el.style.removeProperty('background');
-          el.style.removeProperty('background-color');
-          el.style.removeProperty('color');
-          el.style.backgroundColor = 'white';
-          el.style.color = 'black';
-        }
-        
-        // Recursively process child elements
-        Array.from(el.children).forEach(child => {
-          if (child instanceof HTMLElement) {
-            removeProblematicStyles(child);
-          }
-        });
-      };
-
-      removeProblematicStyles(clonedContent);
-      
-      // Add basic styling for readability
-      clonedContent.style.cssText = `
-        font-family: Arial, sans-serif;
-        color: black;
-        background: white;
+        font-size: 14px;
         line-height: 1.4;
       `;
 
-      // Style specific elements
-      const styleElements = (el: HTMLElement) => {
-        const tagName = el.tagName.toLowerCase();
-        
-        if (tagName === 'h1') {
-          el.style.fontSize = '24px';
-          el.style.fontWeight = 'bold';
-          el.style.marginBottom = '16px';
-        } else if (tagName === 'h2') {
-          el.style.fontSize = '20px';
-          el.style.fontWeight = 'bold';
-          el.style.marginBottom = '12px';
-        } else if (tagName === 'p') {
-          el.style.marginBottom = '8px';
-        } else if (tagName === 'div' && el.className.includes('ingredient-item')) {
-          el.style.borderBottom = '1px solid #ccc';
-          el.style.padding = '4px 0';
-        }
-        
-        Array.from(el.children).forEach(child => {
-          if (child instanceof HTMLElement) {
-            styleElements(child);
-          }
-        });
-      };
+      // Create a clean HTML structure without any CSS classes or modern color functions
+      const cleanHTML = createCleanHTMLForPDF(element, recipe);
+      tempContainer.innerHTML = cleanHTML;
 
-      styleElements(clonedContent);
-      tempContainer.appendChild(clonedContent);
       document.body.appendChild(tempContainer);
 
       const canvas = await html2canvas(tempContainer, {
@@ -206,6 +149,12 @@ export function RecipePageClient({ recipe }: RecipePageClientProps) {
         logging: false,
         width: 800,
         height: tempContainer.scrollHeight,
+        ignoreElements: (element) => {
+          // Ignore elements that might have problematic styling
+          return element.classList.contains('no-print') || 
+                 element.tagName === 'BUTTON' ||
+                 element.tagName === 'NAV';
+        }
       });
 
       // Clean up temporary container
@@ -241,10 +190,84 @@ export function RecipePageClient({ recipe }: RecipePageClientProps) {
     }
   };
 
+  // Helper function to create clean HTML for PDF generation
+  const createCleanHTMLForPDF = (element: HTMLElement, recipe: RecipeWithDetails): string => {
+    // Extract text content and create a clean structure
+    const title = recipe.title;
+    const summary = recipe.summary || '';
+    const diets = recipe.diets.map(diet => diet.replace('_', ' ')).join(', ');
+    const tags = recipe.tags.join(', ');
+    const prepTime = recipe.prepMinutes ? `${recipe.prepMinutes} min` : 'N/A';
+    const cookTime = recipe.cookMinutes ? `${recipe.cookMinutes} min` : 'N/A';
+    const servings = recipe.servings || 'N/A';
+    const author = recipe.author.name || recipe.author.email;
+    const createdAt = new Date(recipe.createdAt).toLocaleDateString();
+
+    // Build ingredients list
+    const ingredientsList = recipe.items.map(item => 
+      `<div style="padding: 8px 0; border-bottom: 1px solid #ddd;">
+        <strong>${item.qty} ${item.unit} ${item.ingredient.name}</strong>
+        ${item.notes ? `<br><span style="color: #666; font-size: 12px;">${item.notes}</span>` : ''}
+      </div>`
+    ).join('');
+
+    // Build instructions list
+    const instructionsList = (recipe.steps as Step[]).map(step => 
+      `<div style="margin-bottom: 16px; display: flex; gap: 12px;">
+        <div style="width: 32px; height: 32px; background: #f97316; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-size: 14px;">
+          ${step.order}
+        </div>
+        <div style="flex: 1; padding-top: 4px;">
+          ${step.text}
+        </div>
+      </div>`
+    ).join('');
+
+    return `
+      <div style="max-width: 100%; margin: 0; padding: 0; background: white; color: black;">
+        <!-- Title -->
+        <h1 style="font-size: 28px; font-weight: bold; margin-bottom: 16px; color: black;">${title}</h1>
+        
+        <!-- Summary -->
+        ${summary ? `<p style="font-size: 16px; margin-bottom: 20px; color: #333; line-height: 1.5;">${summary}</p>` : ''}
+        
+        <!-- Meta Information -->
+        <div style="background: #f5f5f5; padding: 16px; margin-bottom: 24px; border: 1px solid #ddd;">
+          <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 12px;">
+            <div><strong>Prep Time:</strong> ${prepTime}</div>
+            <div><strong>Cook Time:</strong> ${cookTime}</div>
+            <div><strong>Servings:</strong> ${servings}</div>
+          </div>
+          ${diets ? `<div style="margin-bottom: 8px;"><strong>Diets:</strong> ${diets}</div>` : ''}
+          ${tags ? `<div><strong>Tags:</strong> ${tags}</div>` : ''}
+        </div>
+        
+        <!-- Ingredients -->
+        <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 16px; color: black;">Ingredients</h2>
+        <div style="margin-bottom: 32px;">
+          ${ingredientsList}
+        </div>
+        
+        <!-- Instructions -->
+        <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 16px; color: black;">Instructions</h2>
+        <div style="margin-bottom: 32px;">
+          ${instructionsList}
+        </div>
+        
+        <!-- Author -->
+        <div style="margin-top: 32px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 14px; color: #666;">
+          <strong>Recipe by:</strong> ${author}<br>
+          <strong>Created:</strong> ${createdAt}
+        </div>
+      </div>
+    `;
+  };
+
   return (
     <>
-      <div className="space-y-3">
+      <div className="space-y-3 mt-6">
         <Button
+          variant="secondary"
           className="w-full"
           size="lg"
           onClick={() => setIsAddToListDialogOpen(true)}
@@ -284,7 +307,7 @@ export function RecipePageClient({ recipe }: RecipePageClientProps) {
         {isOwner && (
           <div className="grid grid-cols-2 gap-2">
             <Button
-              variant="outline"
+              variant="primary"
               onClick={handleEdit}
               className="w-full"
             >

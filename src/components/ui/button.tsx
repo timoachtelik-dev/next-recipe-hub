@@ -5,20 +5,15 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-gray-300 focus-visible:ring-gray-300 focus-visible:ring-[3px] aria-invalid:ring-red-500/20 dark:aria-invalid:ring-red-500/40 aria-invalid:border-red-500",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
   {
     variants: {
       variant: {
-        default: "bg-gray-900 text-white hover:bg-gray-800",
-        destructive:
-          "bg-red-500 text-white hover:bg-red-600 focus-visible:ring-red-500/20 dark:focus-visible:ring-red-500/40 dark:bg-red-600",
-        outline:
-          "border bg-white shadow-xs hover:bg-gray-100 hover:text-gray-900",
-        secondary:
-          "bg-gray-100 text-gray-900 hover:bg-gray-200",
-        ghost:
-          "hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-200",
-        link: "text-gray-900 underline-offset-4 hover:underline",
+        primary: "bg-primary text-gray-900 hover:bg-primary-hover focus-visible:ring-primary",
+        secondary: "bg-secondary text-gray-900 hover:bg-secondary-hover focus-visible:ring-secondary",
+        destructive: "bg-destructive text-white hover:bg-destructive-hover focus-visible:ring-destructive",
+        link: "text-gray-900 underline-offset-4 hover:underline hover:text-link-hover",
+        outline: "border-2 border-outline text-outline bg-white hover:bg-outline hover:text-white focus-visible:ring-outline",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
@@ -28,7 +23,7 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "primary",
       size: "default",
     },
   }

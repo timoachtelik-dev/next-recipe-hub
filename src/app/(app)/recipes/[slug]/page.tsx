@@ -3,7 +3,11 @@ import { Badge } from "@/components/ui/badge";
 import { SafeImage } from "@/components/ui/safe-image";
 import { RecipeMeta } from "@/components/recipe/recipe-meta";
 import { getRecipeBySlug } from "@/server/recipes";
-import { Step, RecipeWithDetails } from "@/types";
+import { Step, RecipeWithDetails, NutritionData } from "@/types";
+import { NutritionSummary } from "@/components/nutrition/nutrition-summary";
+import { NutritionBreakdown } from "@/components/nutrition/nutrition-breakdown";
+import { NutritionBadges } from "@/components/nutrition/nutrition-badges";
+import { getNutritionBadges } from "@/lib/nutrition-badges";
 
 type RecipeItemWithIngredient = RecipeWithDetails['items'][0];
 import { ChefHat } from "lucide-react";
@@ -25,6 +29,11 @@ export default async function RecipePage({ params }: RecipePageProps) {
   }
 
   const steps = recipe.steps as Step[];
+
+  // Get nutrition badges if nutrition data is available
+  const nutritionBadges = recipe.nutrition
+    ? getNutritionBadges(recipe.nutrition as NutritionData, recipe.diets)
+    : [];
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -70,10 +79,26 @@ export default async function RecipePage({ params }: RecipePageProps) {
               ))}
             </div>
 
+            {nutritionBadges.length > 0 && (
+              <div className="mb-4">
+                <NutritionBadges badges={nutritionBadges} maxBadges={5} />
+              </div>
+            )}
+
             <div className="recipe-meta">
               <RecipeMeta recipe={recipe} />
             </div>
           </div>
+
+          {/* Nutrition Summary */}
+          {recipe.nutrition && (
+            <div className="mb-8">
+              <NutritionSummary
+                nutrition={recipe.nutrition as NutritionData}
+                servings={recipe.servings}
+              />
+            </div>
+          )}
 
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Ingredients */}
@@ -97,6 +122,16 @@ export default async function RecipePage({ params }: RecipePageProps) {
               <div className="no-print">
                 <RecipePageClient recipe={recipe} />
               </div>
+
+              {/* Nutrition Breakdown */}
+              {recipe.nutrition && (
+                <div className="mt-8 p-6 bg-white border border-gray-200 rounded-lg">
+                  <NutritionBreakdown
+                    nutrition={recipe.nutrition as NutritionData}
+                    servings={recipe.servings}
+                  />
+                </div>
+              )}
             </div>
 
             {/* Instructions */}
