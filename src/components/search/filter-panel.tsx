@@ -102,9 +102,9 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
           {activeFiltersCount > 0 && (
             <Button 
               onClick={handleClear} 
-              variant="ghost" 
+              variant="link" 
               size="sm"
-              className="w-full justify-start text-orange-600 hover:text-orange-700 hover:bg-orange-50"
+              className="w-full justify-start"
             >
               <X className="h-4 w-4 mr-2" />
               Clear all filters
@@ -266,7 +266,7 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
             >
               Clear
             </Button>
-            <Button onClick={handleApply} className="flex-1 bg-orange-600 hover:bg-orange-700">
+            <Button variant="primary" onClick={handleApply} className="flex-1">
               Show Results
             </Button>
           </div>

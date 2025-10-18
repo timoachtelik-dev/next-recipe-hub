@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { CreateRecipeInput, UpdateRecipeInput, RecipeSearchInput } from "@/lib/validators";
+import { calculateAndSaveRecipeNutrition } from "./nutrition";
 
 export async function createRecipe(data: CreateRecipeInput, authorId: string) {
   const slug = data.title
@@ -40,7 +41,24 @@ export async function createRecipe(data: CreateRecipeInput, authorId: string) {
     },
   });
 
-  return recipe;
+  // Auto-calculate nutrition from ingredients
+  await calculateAndSaveRecipeNutrition(recipe.id);
+
+  // Fetch the updated recipe with calculated nutrition
+  const updatedRecipe = await prisma.recipe.findUnique({
+    where: { id: recipe.id },
+    include: {
+      author: true,
+      items: {
+        include: {
+          ingredient: true,
+        },
+      },
+      nutrition: true,
+    },
+  });
+
+  return updatedRecipe || recipe;
 }
 
 export async function getRecipe(id: string) {
@@ -83,7 +101,7 @@ export async function updateRecipe(id: string, data: UpdateRecipeInput) {
       .replace(/(^-|-$)/g, "");
   }
 
-  return await prisma.recipe.update({
+  const recipe = await prisma.recipe.update({
     where: { id },
     data: updateData,
     include: {
@@ -96,6 +114,29 @@ export async function updateRecipe(id: string, data: UpdateRecipeInput) {
       nutrition: true,
     },
   });
+
+  // Recalculate nutrition if ingredients or servings changed
+  if (data.items || data.servings) {
+    await calculateAndSaveRecipeNutrition(id);
+
+    // Fetch the updated recipe with recalculated nutrition
+    const updatedRecipe = await prisma.recipe.findUnique({
+      where: { id },
+      include: {
+        author: true,
+        items: {
+          include: {
+            ingredient: true,
+          },
+        },
+        nutrition: true,
+      },
+    });
+
+    return updatedRecipe || recipe;
+  }
+
+  return recipe;
 }
 
 export async function deleteRecipe(id: string) {

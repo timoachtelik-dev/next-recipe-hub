@@ -210,10 +210,10 @@ export function IngredientAutocomplete({
           {value && !disabled && (
             <Button
               type="button"
-              variant="ghost"
+              variant="outline"
               size="sm"
               onClick={handleClear}
-              className="h-6 w-6 p-0 text-gray-500 hover:text-gray-900"
+              className="h-6 w-6 p-0"
             >
               <X className="h-3 w-3" />
             </Button>

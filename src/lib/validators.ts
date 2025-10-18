@@ -52,9 +52,32 @@ export const recipeSearchSchema = z.object({
   limit: z.number().min(1).max(50).default(12),
 });
 
+// Nutrition schemas
+export const nutritionDataSchema = z.object({
+  kcal: z.number().min(0, "Calories cannot be negative"),
+  protein: z.number().min(0, "Protein cannot be negative"),
+  carbs: z.number().min(0, "Carbs cannot be negative"),
+  fat: z.number().min(0, "Fat cannot be negative"),
+  fiber: z.number().min(0).optional(),
+  sugar: z.number().min(0).optional(),
+  saturatedFat: z.number().min(0).optional(),
+});
+
+export const ingredientNutritionSchema = z.object({
+  kcal: z.number().min(0),
+  protein: z.number().min(0),
+  carbs: z.number().min(0),
+  fat: z.number().min(0),
+  fiber: z.number().min(0).optional(),
+  sugar: z.number().min(0).optional(),
+  saturatedFat: z.number().min(0).optional(),
+});
+
 export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;
 export type UpdateRecipeInput = z.infer<typeof updateRecipeSchema>;
 export type CreateListInput = z.infer<typeof createListSchema>;
 export type UpdateListInput = z.infer<typeof updateListSchema>;
 export type IngredientAutocompleteInput = z.infer<typeof ingredientAutocompleteSchema>;
 export type RecipeSearchInput = z.infer<typeof recipeSearchSchema>;
+export type NutritionDataInput = z.infer<typeof nutritionDataSchema>;
+export type IngredientNutritionInput = z.infer<typeof ingredientNutritionSchema>;

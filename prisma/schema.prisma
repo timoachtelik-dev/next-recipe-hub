@@ -57,14 +57,15 @@ model VerificationToken {
 }
 
 model Ingredient {
-  id          String   @id          // canonical slug, e.g. "tomato"
-  name        String   @unique
-  category    String?
-  kcalPer100g Int?
-  macros      Json?
-  aliases     String[] // ["Tomate","Roma Tomate"]
-  recipeItems RecipeItem[]
-  listItems   ShoppingListItem[]
+  id               String   @id          // canonical slug, e.g. "tomato"
+  name             String   @unique
+  category         String?
+  kcalPer100g      Int?
+  macros           Json?
+  nutritionPer100g Json?    // Detailed nutritional breakdown per 100g
+  aliases          String[] // ["Tomate","Roma Tomate"]
+  recipeItems      RecipeItem[]
+  listItems        ShoppingListItem[]
 }
 
 model Recipe {
@@ -101,11 +102,17 @@ model RecipeItem {
 model Nutrition {
   id       String  @id @default(cuid())
   recipeId String  @unique
-  kcal     Int
-  protein  Float
-  carbs    Float
-  fat      Float
-  recipe   Recipe  @relation(fields: [recipeId], references: [id])
+  
+  // Macronutrients (per serving)
+  kcal         Int
+  protein      Float
+  carbs        Float
+  fat          Float
+  fiber        Float?
+  sugar        Float?
+  saturatedFat Float?
+  
+  recipe   Recipe  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 }
 
 model ShoppingList {

@@ -59,7 +59,7 @@ export function AddToListSuccessDialog({
             <Button
               onClick={handleViewList}
               className="w-full justify-start"
-              variant="default"
+              variant="secondary"
             >
               <ShoppingCart className="h-4 w-4 mr-2" />
               View Shopping List

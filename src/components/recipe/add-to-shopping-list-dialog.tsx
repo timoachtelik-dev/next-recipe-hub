@@ -207,6 +207,7 @@ export function AddToShoppingListDialog({
             Cancel
           </Button>
           <Button
+            variant="secondary"
             onClick={handleSubmit}
             disabled={
               addItemsMutation.isPending ||
