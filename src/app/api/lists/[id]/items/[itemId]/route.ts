@@ -14,6 +14,8 @@ export async function PATCH(
     }
 
     const { id: listId, itemId } = await params;
+    const body = await request.json();
+    const { text, checked } = body;
 
     // Verify list belongs to user
     const list = await prisma.shoppingList.findFirst({
@@ -24,7 +26,7 @@ export async function PATCH(
       return NextResponse.json({ error: "List not found" }, { status: 404 });
     }
 
-    // Get current item to toggle its checked status
+    // Verify item belongs to list
     const item = await prisma.shoppingListItem.findFirst({
       where: { id: itemId, listId },
     });
@@ -33,14 +35,33 @@ export async function PATCH(
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
 
-    // Toggle the checked status and update parent list's updatedAt
+    // Prepare update data
+    const updateData: { text?: string; checked?: boolean } = {};
+    
+    if (text !== undefined) {
+      if (!text.trim()) {
+        return NextResponse.json(
+          { error: "Item text cannot be empty" },
+          { status: 400 }
+        );
+      }
+      updateData.text = text.trim();
+    }
+    
+    if (checked !== undefined) {
+      updateData.checked = checked;
+    }
+
+    // If no update data provided, toggle checked status (backward compatibility)
+    if (Object.keys(updateData).length === 0) {
+      updateData.checked = !item.checked;
+    }
+
+    // Update item and parent list's updatedAt
     const [updatedItem] = await prisma.$transaction([
       prisma.shoppingListItem.update({
         where: { id: itemId },
-        data: { checked: !item.checked },
-        include: {
-          ingredient: true,
-        },
+        data: updateData,
       }),
       prisma.shoppingList.update({
         where: { id: listId },
@@ -50,9 +71,9 @@ export async function PATCH(
 
     return NextResponse.json(updatedItem);
   } catch (error) {
-    console.error("Error toggling item:", error);
+    console.error("Error updating item:", error);
     return NextResponse.json(
-      { error: "Failed to toggle item" },
+      { error: "Failed to update item" },
       { status: 500 }
     );
   }

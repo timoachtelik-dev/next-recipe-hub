@@ -7,18 +7,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { IngredientAutocomplete } from "@/components/ui/ingredient-autocomplete";
+import { IngredientInput } from "@/components/ui/ingredient-input";
 import { createRecipeSchema, type CreateRecipeInput, type Step, type RecipeItem } from "@/lib/validators";
-import { parseIngredient, isValidIngredient } from "@/lib/ingredient-parser";
 import { RecipeWithDetails } from "@/types";
 import { Plus, X, Save, Loader2, Clock, Users, ChefHat, Utensils, Tag } from "lucide-react";
 import { toast } from "sonner";
+
+type InitialFormItem = CreateRecipeInput["items"][number] & {
+  ingredientName?: string;
+};
 
 interface RecipeFormProps {
   initialData?: Partial<CreateRecipeInput>;
   onSubmit: (data: CreateRecipeInput) => Promise<void>;
   isSubmitting?: boolean;
   submitLabel?: string;
+  ingredientNameMap?: Record<string, string>;
 }
 
 // Delete button component for removing items
@@ -42,13 +46,23 @@ function DeleteButton({
   );
 }
 
+interface IngredientInput {
+  qty: number;
+  unitId: string;
+  ingredientId: string;
+  ingredientName: string;
+}
+
 export function RecipeForm({ 
   initialData, 
   onSubmit, 
   isSubmitting = false, 
-  submitLabel = "Create Recipe" 
+  submitLabel = "Create Recipe",
+  ingredientNameMap,
 }: RecipeFormProps) {
-  const [ingredientInputs, setIngredientInputs] = useState<string[]>([""]);
+  const [ingredientInputs, setIngredientInputs] = useState<IngredientInput[]>([
+    { qty: 1, unitId: "pieces", ingredientId: "", ingredientName: "" }
+  ]);
   
   const {
     register,
@@ -86,12 +100,19 @@ export function RecipeForm({
   // Initialize ingredient inputs if we have initial data
   useEffect(() => {
     if (initialData?.items && initialData.items.length > 0) {
-      const ingredientStrings = initialData.items.map(item => 
-        `${item.qty} ${item.unit} ${item.ingredientId}`
-      );
-      setIngredientInputs(ingredientStrings.length > 0 ? ingredientStrings : [""]);
+      const itemsWithNames = initialData.items as InitialFormItem[];
+      const inputs = itemsWithNames.map(item => ({
+        qty: item.qty,
+        unitId: item.unitId,
+        ingredientId: item.ingredientId,
+        ingredientName:
+          item.ingredientName ||
+          ingredientNameMap?.[item.ingredientId] ||
+          item.ingredientId.replace(/_/g, " "),
+      }));
+      setIngredientInputs(inputs.length > 0 ? inputs : [{ qty: 1, unitId: "pieces", ingredientId: "", ingredientName: "" }]);
     }
-  }, [initialData]);
+  }, [initialData, ingredientNameMap]);
 
   const addTag = (tag: string) => {
     if (tag && !watchedTags.includes(tag)) {
@@ -113,59 +134,54 @@ export function RecipeForm({
     setValue("diets", watchedDiets.filter(diet => diet !== dietToRemove));
   };
 
-  // Handle ingredient input changes
-  const handleIngredientChange = (index: number, value: string) => {
+  // Update form when ingredient inputs change
+  useEffect(() => {
+    const items: RecipeItem[] = ingredientInputs
+      .filter(input => input.ingredientId && input.qty > 0)
+      .map(input => ({
+        ingredientId: input.ingredientId,
+        qty: input.qty,
+        unitId: input.unitId,
+        notes: "",
+      }));
+    
+    setValue("items", items);
+  }, [ingredientInputs, setValue]);
+
+  const handleQtyChange = (index: number, qty: number) => {
     const newInputs = [...ingredientInputs];
-    newInputs[index] = value;
+    newInputs[index] = { ...newInputs[index], qty };
     setIngredientInputs(newInputs);
-    
-    // Parse all ingredients and update form
-    const parsedItems: RecipeItem[] = [];
-    newInputs.forEach(input => {
-      if (input.trim()) {
-        const parsed = parseIngredient(input);
-        if (isValidIngredient(parsed)) {
-          // For now, we'll use the ingredient name as the ID
-          // In a real app, you'd want to match this with the database
-          parsedItems.push({
-            ingredientId: parsed.name.toLowerCase().replace(/\s+/g, '_'),
-            qty: parsed.qty,
-            unit: parsed.unit,
-            notes: "",
-          });
-        }
-      }
-    });
-    
-    setValue("items", parsedItems);
+  };
+
+  const handleUnitChange = (index: number, unitId: string) => {
+    const newInputs = [...ingredientInputs];
+    newInputs[index] = { ...newInputs[index], unitId };
+    setIngredientInputs(newInputs);
+  };
+
+  const handleIngredientChange = (index: number, name: string, ingredientId: string, defaultUnitId?: string) => {
+    const newInputs = [...ingredientInputs];
+    newInputs[index] = {
+      ...newInputs[index],
+      ingredientId,
+      ingredientName: name,
+      unitId: defaultUnitId || newInputs[index].unitId,
+    };
+    setIngredientInputs(newInputs);
   };
 
   const addIngredient = () => {
-    setIngredientInputs([...ingredientInputs, ""]);
+    setIngredientInputs([
+      ...ingredientInputs,
+      { qty: 1, unitId: "pieces", ingredientId: "", ingredientName: "" }
+    ]);
   };
 
   const removeIngredient = (index: number) => {
     if (ingredientInputs.length > 1) {
       const newInputs = ingredientInputs.filter((_, i) => i !== index);
       setIngredientInputs(newInputs);
-      
-      // Update form with remaining ingredients
-      const parsedItems: RecipeItem[] = [];
-      newInputs.forEach(input => {
-        if (input.trim()) {
-          const parsed = parseIngredient(input);
-          if (isValidIngredient(parsed)) {
-            parsedItems.push({
-              ingredientId: parsed.name.toLowerCase().replace(/\s+/g, '_'),
-              qty: parsed.qty,
-              unit: parsed.unit,
-              notes: "",
-            });
-          }
-        }
-      });
-      
-      setValue("items", parsedItems);
     }
   };
 
@@ -207,7 +223,7 @@ export function RecipeForm({
           <Card className="recipe-card">
             <CardHeader className="bg-yellow-50">
               <CardTitle className="flex items-center gap-2 text-yellow-700">
-                <ChefHat className="h-5 w-5" />
+                <ChefHat className="size-5" />
                 Basic Information
               </CardTitle>
             </CardHeader>
@@ -255,7 +271,7 @@ export function RecipeForm({
           <Card className="recipe-card">
             <CardHeader className="bg-blue-50">
               <CardTitle className="flex items-center gap-2 text-blue-700">
-                <Clock className="h-5 w-5" />
+                <Clock className="size-5" />
                 Cooking Information
               </CardTitle>
             </CardHeader>
@@ -310,7 +326,7 @@ export function RecipeForm({
           <Card className="recipe-card">
             <CardHeader className="bg-pink-50">
               <CardTitle className="flex items-center gap-2 text-pink-700">
-                <Utensils className="h-5 w-5" />
+                <Utensils className="size-5" />
                 Ingredients
               </CardTitle>
             </CardHeader>
@@ -318,11 +334,15 @@ export function RecipeForm({
               {ingredientInputs.map((input, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <div className="flex-1">
-                    <IngredientAutocomplete
-                      value={input}
-                      onChange={(value) => handleIngredientChange(index, value)}
-                      placeholder="e.g., '2 cups flour' or '1 tsp salt'"
-                      showParsedPreview={true}
+                    <IngredientInput
+                      qty={input.qty}
+                      unitId={input.unitId}
+                      ingredientName={input.ingredientName}
+                      onQtyChange={(qty) => handleQtyChange(index, qty)}
+                      onUnitChange={(unitId) => handleUnitChange(index, unitId)}
+                      onIngredientChange={(name, ingredientId, defaultUnitId) => 
+                        handleIngredientChange(index, name, ingredientId, defaultUnitId)
+                      }
                     />
                   </div>
                   <DeleteButton
@@ -338,7 +358,7 @@ export function RecipeForm({
                 onClick={addIngredient}
                 className="w-full border-dashed"
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className="size-4 mr-2" />
                 Add Ingredient
               </Button>
 
@@ -390,7 +410,7 @@ export function RecipeForm({
                 onClick={() => appendStep({ order: stepFields.length + 1, text: "" })}
                 className="w-full border-dashed"
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className="size-4 mr-2" />
                 Add Step
               </Button>
 
@@ -404,7 +424,7 @@ export function RecipeForm({
           <Card className="recipe-card">
             <CardHeader className="bg-purple-50">
               <CardTitle className="flex items-center gap-2 text-purple-700">
-                <Tag className="h-5 w-5" />
+                <Tag className="size-5" />
                 Tags & Dietary Information
               </CardTitle>
             </CardHeader>
@@ -414,7 +434,7 @@ export function RecipeForm({
                 <div className="flex flex-wrap gap-2 mb-3">
                   {watchedTags.map((tag) => (
                     <Badge key={tag} variant="outline" className="bg-purple-100 text-purple-800 hover:bg-purple-200 cursor-pointer" onClick={() => removeTag(tag)}>
-                      {tag} <X className="h-3 w-3 ml-1" />
+                      {tag} <X className="size-3 ml-1" />
                     </Badge>
                   ))}
                 </div>
@@ -428,7 +448,7 @@ export function RecipeForm({
                       onClick={() => addTag(tag)}
                       className="text-xs"
                     >
-                      <Plus className="h-3 w-3 mr-1" />
+                      <Plus className="size-3 mr-1" />
                       {tag}
                     </Button>
                   ))}
@@ -440,7 +460,7 @@ export function RecipeForm({
                 <div className="flex flex-wrap gap-2 mb-3">
                   {watchedDiets.map((diet) => (
                     <Badge key={diet} variant="outline" className="bg-pink-100 text-pink-800 hover:bg-pink-200 cursor-pointer" onClick={() => removeDiet(diet)}>
-                      {diet.replace("_", " ")} <X className="h-3 w-3 ml-1" />
+                      {diet.replace("_", " ")} <X className="size-3 ml-1" />
                     </Badge>
                   ))}
                 </div>
@@ -454,7 +474,7 @@ export function RecipeForm({
                       onClick={() => addDiet(diet)}
                       className="text-xs"
                     >
-                      <Plus className="h-3 w-3 mr-1" />
+                      <Plus className="size-3 mr-1" />
                       {diet.replace("_", " ")}
                     </Button>
                   ))}
@@ -476,12 +496,12 @@ export function RecipeForm({
         >
           {isSubmitting ? (
             <>
-              <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+              <Loader2 className="size-5 mr-2 animate-spin" />
               Saving Recipe...
             </>
           ) : (
             <>
-              <Save className="h-5 w-5 mr-2" />
+              <Save className="size-5 mr-2" />
               {submitLabel}
             </>
           )}

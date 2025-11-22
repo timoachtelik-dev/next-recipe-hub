@@ -205,7 +205,7 @@ export function IngredientAutocomplete({
         />
         <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
           {isLoading && (
-            <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
+            <Loader2 className="size-4 animate-spin text-gray-500" />
           )}
           {value && !disabled && (
             <Button
@@ -213,13 +213,13 @@ export function IngredientAutocomplete({
               variant="outline"
               size="sm"
               onClick={handleClear}
-              className="h-6 w-6 p-0"
+              className="size-6 p-0"
             >
-              <X className="h-3 w-3" />
+              <X className="size-3" />
             </Button>
           )}
           <ChevronDown 
-            className={`h-4 w-4 text-gray-500 transition-transform ${
+            className={`size-4 text-gray-500 transition-transform ${
               isOpen ? "rotate-180" : ""
             }`} 
           />
@@ -228,10 +228,10 @@ export function IngredientAutocomplete({
 
       {/* Parsed ingredient preview */}
       {showParsedPreview && parsedIngredient && parsedIngredient.name && (
-        <div className="mt-2 bg-white flex flex-wrap gap-1">
+        <div className="mt-2 bg-baby-powder flex flex-wrap gap-1">
           {parsedIngredient.qty > 0 && (
             <Badge variant="outline" className="ingredient-badge">
-              {parsedIngredient.qty} {parsedIngredient.unit}
+              {parsedIngredient.unit}
             </Badge>
           )}
           <Badge variant="outline" className="ingredient-badge">
@@ -244,7 +244,7 @@ export function IngredientAutocomplete({
       {isOpen && (
         <div
           ref={dropdownRef}
-          className="absolute bg-white z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto"
+          className="absolute bg-baby-powder z-50 w-full mt-1 bg-baby-powder border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto"
         >
           {suggestions.length > 0 ? (
             <div className="py-1">

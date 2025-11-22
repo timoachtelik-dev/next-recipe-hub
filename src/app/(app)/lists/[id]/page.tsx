@@ -9,8 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Plus, ShoppingCart, Pencil, Check, X } from "lucide-react";
 import { toast } from "sonner";
 import type { ShoppingListWithItems } from "@/types";
-
-type ShoppingListItemWithIngredient = ShoppingListWithItems['items'][0];
+import type { ShoppingListItem } from "@prisma/client";
 
 export default function ListPage() {
   const params = useParams();
@@ -77,6 +76,26 @@ export default function ListPage() {
     },
   });
 
+  const updateItemMutation = useMutation({
+    mutationFn: async ({ itemId, text }: { itemId: string; text: string }) => {
+      const response = await fetch(`/api/lists/${listId}/items/${itemId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      if (!response.ok) throw new Error("Failed to update item");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["list", listId] });
+      queryClient.invalidateQueries({ queryKey: ["lists"] });
+      toast.success("Item updated");
+    },
+    onError: () => {
+      toast.error("Failed to update item");
+    },
+  });
+
   const handleAddItem = async () => {
     if (!newItem.trim()) return;
 
@@ -85,7 +104,7 @@ export default function ListPage() {
       const response = await fetch(`/api/lists/${listId}/items`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newItem.trim() }),
+        body: JSON.stringify({ text: newItem.trim() }),
       });
 
       if (!response.ok) throw new Error("Failed to add item");
@@ -98,6 +117,10 @@ export default function ListPage() {
     } finally {
       setIsAddingItem(false);
     }
+  };
+
+  const handleUpdateItem = async (itemId: string, text: string) => {
+    await updateItemMutation.mutateAsync({ itemId, text });
   };
 
   const handleStartEdit = () => {
@@ -147,15 +170,15 @@ export default function ListPage() {
     );
   }
 
-  const checkedItems = list.items.filter((item: ShoppingListItemWithIngredient) => item.checked);
-  const uncheckedItems = list.items.filter((item: ShoppingListItemWithIngredient) => !item.checked);
+  const checkedItems = list.items.filter((item: ShoppingListItem) => item.checked);
+  const uncheckedItems = list.items.filter((item: ShoppingListItem) => !item.checked);
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-2xl mx-auto">
         {/* List Name with Edit */}
         <div className="flex items-center gap-3 mb-6">
-          <ShoppingCart className="h-6 w-6 text-orange-600 flex-shrink-0" />
+          <ShoppingCart className="size-6 text-orange-600 flex-shrink-0" />
           {isEditingName ? (
             <div className="flex items-center gap-2 flex-1">
               <Input
@@ -177,15 +200,15 @@ export default function ListPage() {
                 onClick={handleSaveEdit}
                 disabled={!editedName.trim() || updateListNameMutation.isPending}
               >
-                <Check className="h-4 w-4" />
+                <Check className="size-4" />
               </Button>
               <Button
                 size="sm"
-                variant="outline"
+                variant="destructive"
                 onClick={handleCancelEdit}
                 disabled={updateListNameMutation.isPending}
               >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
               </Button>
             </div>
           ) : (
@@ -199,14 +222,14 @@ export default function ListPage() {
                 onClick={handleStartEdit}
                 aria-label="Edit list name"
               >
-                <Pencil className="h-4 w-4" />
+                <Pencil className="size-4" />
               </Button>
             </div>
           )}
         </div>
 
         {/* Add Item Form */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 items-center mb-6">
           <Input
             placeholder="Add new item..."
             value={newItem}
@@ -223,7 +246,7 @@ export default function ListPage() {
             onClick={handleAddItem}
             disabled={!newItem.trim() || isAddingItem}
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="size-4" />
           </Button>
         </div>
 
@@ -234,12 +257,13 @@ export default function ListPage() {
               To Buy ({uncheckedItems.length})
             </h2>
             <div className="space-y-2">
-              {uncheckedItems.map((item: ShoppingListItemWithIngredient) => (
+              {uncheckedItems.map((item: ShoppingListItem) => (
                 <ListItemRow
                   key={item.id}
                   item={item}
                   onToggle={toggleItemMutation.mutate}
                   onDelete={deleteItemMutation.mutate}
+                  onUpdate={handleUpdateItem}
                 />
               ))}
             </div>
@@ -253,12 +277,13 @@ export default function ListPage() {
               Completed ({checkedItems.length})
             </h2>
             <div className="space-y-2">
-              {checkedItems.map((item: ShoppingListItemWithIngredient) => (
+              {checkedItems.map((item: ShoppingListItem) => (
                 <ListItemRow
                   key={item.id}
                   item={item}
                   onToggle={toggleItemMutation.mutate}
                   onDelete={deleteItemMutation.mutate}
+                  onUpdate={handleUpdateItem}
                 />
               ))}
             </div>
@@ -267,7 +292,7 @@ export default function ListPage() {
 
         {list.items.length === 0 && (
           <div className="text-center py-12">
-            <ShoppingCart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <ShoppingCart className="size-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               Your list is empty
             </h3>

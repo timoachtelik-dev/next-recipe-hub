@@ -106,7 +106,7 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
               size="sm"
               className="w-full justify-start"
             >
-              <X className="h-4 w-4 mr-2" />
+              <X className="size-4 mr-2" />
               Clear all filters
             </Button>
           )}
@@ -130,7 +130,7 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
                     relative flex items-center justify-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all
                     ${filters.diet === option.value 
                       ? 'border-orange-500 bg-orange-50 text-orange-700' 
-                      : 'border-gray-200 hover:border-gray-300 bg-white'
+                      : 'border-gray-200 hover:border-gray-300 bg-baby-powder'
                     }
                   `}
                 >
@@ -139,7 +139,7 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
                     {option.label.split(' ')[1]}
                   </span>
                   {filters.diet === option.value && (
-                    <div className="absolute -top-1 -right-1 h-5 w-5 bg-orange-500 rounded-full flex items-center justify-center">
+                    <div className="absolute -top-1 -right-1 size-5 bg-orange-500 rounded-full flex items-center justify-center">
                       <span className="text-white text-xs">✓</span>
                     </div>
                   )}
@@ -171,7 +171,7 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-lg flex items-center gap-2">
-                <Clock className="h-5 w-5 text-orange-600" />
+                <Clock className="size-5 text-orange-600" />
                 Cooking Time
               </h3>
               <span className="text-sm font-medium text-orange-600">
@@ -196,7 +196,7 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-lg flex items-center gap-2">
-                <Users className="h-5 w-5 text-orange-600" />
+                <Users className="size-5 text-orange-600" />
                 Servings
               </h3>
               <span className="text-sm font-medium text-orange-600">
@@ -233,7 +233,7 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-lg flex items-center gap-2">
-                <Flame className="h-5 w-5 text-orange-600" />
+                <Flame className="size-5 text-orange-600" />
                 Max Calories
               </h3>
               <span className="text-sm font-medium text-orange-600">
@@ -256,7 +256,7 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
         </div>
 
         {/* Fixed bottom action bar */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 bg-white border-t shadow-lg">
+        <div className="absolute bottom-0 left-0 right-0 p-6 bg-baby-powder border-t shadow-lg">
           <div className="flex gap-3 max-w-[400px] ml-auto">
             <Button 
               onClick={handleClear} 

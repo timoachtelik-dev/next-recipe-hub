@@ -9,9 +9,7 @@ export async function createList(data: CreateListInput, userId: string) {
     },
     include: {
       items: {
-        include: {
-          ingredient: true,
-        },
+        orderBy: { createdAt: "asc" },
       },
     },
   });
@@ -25,9 +23,7 @@ export async function getList(id: string, userId: string) {
     },
     include: {
       items: {
-        include: {
-          ingredient: true,
-        },
+        orderBy: { createdAt: "asc" },
       },
     },
   });
@@ -42,9 +38,7 @@ export async function updateList(id: string, data: UpdateListInput, userId: stri
     data,
     include: {
       items: {
-        include: {
-          ingredient: true,
-        },
+        orderBy: { createdAt: "asc" },
       },
     },
   });
@@ -72,9 +66,7 @@ export async function getUserLists(userId: string) {
     where: { userId },
     include: {
       items: {
-        include: {
-          ingredient: true,
-        },
+        orderBy: { createdAt: "asc" },
       },
     },
     orderBy: { createdAt: "desc" },
@@ -119,9 +111,7 @@ export async function toggleListItem(listId: string, itemId: string, userId: str
 
 export async function addItemToList(
   listId: string,
-  ingredientId: string,
-  qty: number,
-  unit: string,
+  text: string,
   userId: string
 ) {
   const list = await prisma.shoppingList.findFirst({
@@ -137,12 +127,8 @@ export async function addItemToList(
     prisma.shoppingListItem.create({
       data: {
         listId,
-        ingredientId,
-        qty,
-        unit,
-      },
-      include: {
-        ingredient: true,
+        text,
+        checked: false,
       },
     }),
     prisma.shoppingList.update({

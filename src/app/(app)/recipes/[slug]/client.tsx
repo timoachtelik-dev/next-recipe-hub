@@ -49,7 +49,8 @@ export function RecipePageClient({ recipe }: RecipePageClientProps) {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete recipe");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to delete recipe");
       }
 
       return response.json();
@@ -61,7 +62,8 @@ export function RecipePageClient({ recipe }: RecipePageClientProps) {
     },
     onError: (error) => {
       console.error("Error deleting recipe:", error);
-      toast.error("Failed to delete recipe. Please try again.");
+      const message = error instanceof Error ? error.message : "Failed to delete recipe. Please try again.";
+      toast.error(message);
     },
   });
 
@@ -206,7 +208,7 @@ export function RecipePageClient({ recipe }: RecipePageClientProps) {
     // Build ingredients list
     const ingredientsList = recipe.items.map(item => 
       `<div style="padding: 8px 0; border-bottom: 1px solid #ddd;">
-        <strong>${item.qty} ${item.unit} ${item.ingredient.name}</strong>
+        <strong>${item.qty} ${item.unit.label} ${item.ingredient.name}</strong>
         ${item.notes ? `<br><span style="color: #666; font-size: 12px;">${item.notes}</span>` : ''}
       </div>`
     ).join('');
@@ -266,15 +268,17 @@ export function RecipePageClient({ recipe }: RecipePageClientProps) {
   return (
     <>
       <div className="space-y-3 mt-6">
-        <Button
-          variant="secondary"
-          className="w-full"
-          size="lg"
-          onClick={() => setIsAddToListDialogOpen(true)}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Add to Shopping List
-        </Button>
+        {session && (
+          <Button
+            variant="secondary"
+            className="w-full"
+            size="lg"
+            onClick={() => setIsAddToListDialogOpen(true)}
+          >
+            <Plus className="size-4 mr-2" />
+            Add to Shopping List
+          </Button>
+        )}
 
         {/* Share and Print Actions */}
         <div className="grid grid-cols-3 gap-2">
@@ -284,7 +288,7 @@ export function RecipePageClient({ recipe }: RecipePageClientProps) {
             className="w-full"
             title="Share recipe"
           >
-            <Share2 className="h-4 w-4" />
+            <Share2 className="size-4" />
           </Button>
           <Button
             variant="outline"
@@ -292,7 +296,7 @@ export function RecipePageClient({ recipe }: RecipePageClientProps) {
             className="w-full"
             title="Print recipe"
           >
-            <Printer className="h-4 w-4" />
+            <Printer className="size-4" />
           </Button>
           <Button
             variant="outline"
@@ -300,7 +304,7 @@ export function RecipePageClient({ recipe }: RecipePageClientProps) {
             className="w-full"
             title="Download PDF"
           >
-            <Download className="h-4 w-4" />
+            <Download className="size-4" />
           </Button>
         </div>
 
@@ -311,7 +315,7 @@ export function RecipePageClient({ recipe }: RecipePageClientProps) {
               onClick={handleEdit}
               className="w-full"
             >
-              <Edit className="h-4 w-4 mr-2" />
+              <Edit className="size-4 mr-2" />
               Edit Recipe
             </Button>
             <Button
@@ -319,7 +323,7 @@ export function RecipePageClient({ recipe }: RecipePageClientProps) {
               onClick={() => setIsDeleteDialogOpen(true)}
               className="w-full"
             >
-              <Trash2 className="h-4 w-4 mr-2" />
+              <Trash2 className="size-4 mr-2" />
               Delete
             </Button>
           </div>

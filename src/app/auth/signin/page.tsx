@@ -46,8 +46,8 @@ function SignInForm() {
       <div className="min-h-screen  flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="h-8 w-8 text-green-600" />
+            <div className="size-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="size-8 text-green-600" />
             </div>
             <CardTitle className="text-2xl">Check your email</CardTitle>
             <CardDescription>
@@ -70,7 +70,7 @@ function SignInForm() {
             </Button>
             <Link href="/" className="block">
               <Button variant="link" className="w-full">
-                <ArrowLeft className="h-4 w-4 mr-2" />
+                <ArrowLeft className="size-4 mr-2" />
                 Back to home
               </Button>
             </Link>
@@ -84,7 +84,7 @@ function SignInForm() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <Link href="/" className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-6">
-          <ArrowLeft className="h-4 w-4 mr-2" />
+          <ArrowLeft className="size-4 mr-2" />
           Back to home
         </Link>
 
@@ -105,7 +105,7 @@ function SignInForm() {
                   Email address
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 size-4" />
                   <Input
                     id="email"
                     type="email"

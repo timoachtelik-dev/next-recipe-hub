@@ -35,7 +35,7 @@ export function RecipeListItem({ recipe, variant = "default", onItemClick, isSel
           isSelected ? "bg-orange-50" : ""
         }`}
       >
-        <div className="w-20 h-20 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden relative">
+        <div className="size-20 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden relative">
           <SafeImage
             src={recipe.heroImage}
             alt={recipe.title}
@@ -43,7 +43,7 @@ export function RecipeListItem({ recipe, variant = "default", onItemClick, isSel
             className="object-cover"
             placeholder={
               <div className="flex items-center justify-center h-full">
-                <ChefHat className="h-8 w-8 text-gray-300" />
+                <ChefHat className="size-8 text-gray-300" />
               </div>
             }
           />
@@ -64,13 +64,13 @@ export function RecipeListItem({ recipe, variant = "default", onItemClick, isSel
             <div className="flex items-center gap-3 text-xs text-gray-500 pt-2">
               {totalTime > 0 && (
                 <div className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
+                  <Clock className="size-3" />
                   <span>{totalTime} min</span>
                 </div>
               )}
               {calories > 0 && (
                 <div className="flex items-center gap-1">
-                  <Zap className="h-3 w-3" />
+                  <Zap className="size-3" />
                   <span>{calories} kcal</span>
                 </div>
               )}
@@ -83,7 +83,7 @@ export function RecipeListItem({ recipe, variant = "default", onItemClick, isSel
 
   // Default variant for full page view
   return (
-    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100">
+    <div className="bg-baby-powder rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100">
       <div className="flex flex-col md:flex-row">
         {/* Image Section */}
         <div className="md:w-64 h-48 md:h-auto relative bg-gray-100 flex-shrink-0">
@@ -94,7 +94,7 @@ export function RecipeListItem({ recipe, variant = "default", onItemClick, isSel
             className="object-cover"
             placeholder={
               <div className="flex items-center justify-center h-full text-gray-400">
-                <ChefHat className="h-16 w-16" />
+                <ChefHat className="size-16" />
               </div>
             }
           />
@@ -142,19 +142,19 @@ export function RecipeListItem({ recipe, variant = "default", onItemClick, isSel
               <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
                 {totalTime > 0 && (
                   <div className="flex items-center gap-1.5">
-                    <Clock className="h-4 w-4 text-orange-600" />
+                    <Clock className="size-4 text-orange-600" />
                     <span className="font-medium">{totalTime} min</span>
                   </div>
                 )}
                 {recipe.servings > 0 && (
                   <div className="flex items-center gap-1.5">
-                    <Users className="h-4 w-4 text-orange-600" />
+                    <Users className="size-4 text-orange-600" />
                     <span className="font-medium">{recipe.servings} servings</span>
                   </div>
                 )}
                 {calories > 0 && (
                   <div className="flex items-center gap-1.5">
-                    <Zap className="h-4 w-4 text-orange-600" />
+                    <Zap className="size-4 text-orange-600" />
                     <span className="font-medium">{calories} kcal</span>
                   </div>
                 )}
@@ -170,9 +170,9 @@ export function RecipeListItem({ recipe, variant = "default", onItemClick, isSel
               )}
 
               <Link href={`/recipes/${recipe.slug}`}>
-                <Button className="bg-orange-600 hover:bg-orange-700">
+                <Button className="w-full text-center py-2 px-4 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors">
                   View Recipe
-                  <ArrowRight className="h-4 w-4 ml-2" />
+                  <ArrowRight className="size-4 ml-2" />
                 </Button>
               </Link>
             </div>

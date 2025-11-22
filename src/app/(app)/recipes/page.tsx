@@ -147,7 +147,7 @@ function RecipesPageContent() {
               onClick={() => router.push("/recipes/new")}
               size="lg"
             >
-              <Plus className="h-5 w-5 mr-2" />
+              <Plus className="size-5 mr-2" />
               Create Recipe
             </Button>
           </div>
@@ -155,13 +155,13 @@ function RecipesPageContent() {
           {/* Search Bar */}
           <div className="flex gap-3 max-w-3xl">
             <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 size-5" />
               <Input
                 type="search"
                 placeholder="Search for recipes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 h-12 text-gray-900 bg-white border-0 shadow-lg"
+                className="pl-12 h-12 text-gray-900 bg-baby-powder border-0 shadow-lg"
               />
             </div>
             <Button 
@@ -170,7 +170,7 @@ function RecipesPageContent() {
               size="lg"
               className="h-12 px-6"
             >
-              <Filter className="h-5 w-5 mr-2" />
+              <Filter className="size-5 mr-2" />
               Filters
               {activeFiltersCount > 0 && (
                 <Badge className="ml-2 bg-orange-600 text-white">
@@ -235,7 +235,7 @@ function RecipesPageContent() {
           <p className="text-gray-600">
             {isLoading ? (
               <span className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
                 Loading recipes...
               </span>
             ) : (
@@ -258,7 +258,7 @@ function RecipesPageContent() {
                 onClick={() => setViewMode("grid")}
                 className="h-8 px-3"
               >
-                <Grid3x3 className="h-4 w-4" />
+                <Grid3x3 className="size-4" />
                 <span className="ml-2 hidden sm:inline">Grid</span>
               </Button>
               <Button
@@ -267,7 +267,7 @@ function RecipesPageContent() {
                 onClick={() => setViewMode("list")}
                 className="h-8 px-3"
               >
-                <List className="h-4 w-4" />
+                <List className="size-4" />
                 <span className="ml-2 hidden sm:inline">List</span>
               </Button>
             </div>
@@ -281,7 +281,7 @@ function RecipesPageContent() {
               {Array.from({ length: 12 }).map((_, i) => (
                 <div key={i} className="animate-pulse">
                   <div className="bg-gray-200 aspect-video rounded-t-lg" />
-                  <div className="bg-white p-4 rounded-b-lg space-y-3">
+                  <div className="bg-baby-powder p-4 rounded-b-lg space-y-3">
                     <div className="h-4 bg-gray-200 rounded w-3/4" />
                     <div className="h-3 bg-gray-200 rounded w-full" />
                     <div className="h-3 bg-gray-200 rounded w-5/6" />
@@ -292,7 +292,7 @@ function RecipesPageContent() {
           ) : (
             <div className="space-y-4">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="animate-pulse bg-white rounded-lg p-6 flex gap-4">
+                <div key={i} className="animate-pulse bg-baby-powder rounded-lg p-6 flex gap-4">
                   <div className="w-48 h-32 bg-gray-200 rounded flex-shrink-0" />
                   <div className="flex-1 space-y-3">
                     <div className="h-6 bg-gray-200 rounded w-3/4" />
@@ -352,7 +352,7 @@ function RecipesPageContent() {
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="size-4" />
               Previous
             </Button>
             
@@ -388,7 +388,7 @@ function RecipesPageContent() {
               disabled={currentPage === pagination.pages}
             >
               Next
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="size-4" />
             </Button>
           </div>
         )}

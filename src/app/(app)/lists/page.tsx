@@ -121,19 +121,14 @@ export default function ListsPage() {
 
       // Add all items from original list
       if (list.items.length > 0) {
-        const itemsResponse = await fetch(`/api/lists/${newList.id}/items/batch`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            items: list.items.map((item) => ({
-              ingredientId: item.ingredientId,
-              qty: item.qty,
-              unit: item.unit,
-              notes: item.notes,
-            })),
-          }),
-        });
-        if (!itemsResponse.ok) throw new Error("Failed to copy items");
+        for (const item of list.items) {
+          const itemResponse = await fetch(`/api/lists/${newList.id}/items`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: item.text }),
+          });
+          if (!itemResponse.ok) throw new Error("Failed to copy item");
+        }
       }
       return newList;
     },
@@ -229,7 +224,7 @@ export default function ListsPage() {
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="secondary">
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className="size-4 mr-2" />
                 New List
               </Button>
             </DialogTrigger>
@@ -279,10 +274,10 @@ export default function ListsPage() {
         {lists.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <Card>
-              <CardContent>
+              <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-orange-100 rounded-lg">
-                    <ListChecks className="h-6 w-6 text-orange-600" />
+                    <ListChecks className="size-6 text-orange-600" />
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Total Lists</p>
@@ -293,10 +288,10 @@ export default function ListsPage() {
             </Card>
 
             <Card>
-              <CardContent>
+              <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-blue-100 rounded-lg">
-                    <Package className="h-6 w-6 text-blue-600" />
+                    <Package className="size-6 text-blue-600" />
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Total Items</p>
@@ -307,10 +302,10 @@ export default function ListsPage() {
             </Card>
 
             <Card>
-              <CardContent>
+              <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-green-100 rounded-lg">
-                    <Calendar className="h-6 w-6 text-green-600" />
+                    <Calendar className="size-6 text-green-600" />
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Modified Today</p>
@@ -326,7 +321,7 @@ export default function ListsPage() {
         {lists.length > 0 && (
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-gray-400" />
               <Input
                 placeholder="Search lists by name..."
                 value={searchQuery}
@@ -338,21 +333,21 @@ export default function ListsPage() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="gap-2">
-                  <ArrowUpDown className="h-4 w-4" />
+                  <ArrowUpDown className="size-4" />
                   Sort by: {sortBy === "date" ? "Date" : sortBy === "name" ? "Name" : "Items"}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onSelect={() => setSortBy("date")}>
-                  <Calendar className="h-4 w-4 mr-2" />
+                  <Calendar className="size-4 mr-2" />
                   Last Updated
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => setSortBy("name")}>
-                  <ListChecks className="h-4 w-4 mr-2" />
+                  <ListChecks className="size-4 mr-2" />
                   Name
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => setSortBy("items")}>
-                  <Package className="h-4 w-4 mr-2" />
+                  <Package className="size-4 mr-2" />
                   Item Count
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -416,7 +411,7 @@ function ListCard({ list, onDelete, onDuplicate, onView }: ListCardProps) {
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2 flex-1" onClick={onView}>
-              <ShoppingCart className="h-5 w-5 text-orange-600 flex-shrink-0" />
+              <ShoppingCart className="size-5 text-orange-600 flex-shrink-0" />
               <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-orange-600 transition-colors">
                 {list.name}
               </h3>
@@ -424,17 +419,17 @@ function ListCard({ list, onDelete, onDuplicate, onView }: ListCardProps) {
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                  <MoreVertical className="h-4 w-4" />
+                <Button variant="outline" size="sm" className="size-8 p-0">
+                  <MoreVertical className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={onView}>
-                  <Eye className="h-4 w-4 mr-2" />
+                  <Eye className="size-4 mr-2" />
                   View
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={onDuplicate}>
-                  <Copy className="h-4 w-4 mr-2" />
+                  <Copy className="size-4 mr-2" />
                   Duplicate
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -445,7 +440,7 @@ function ListCard({ list, onDelete, onDuplicate, onView }: ListCardProps) {
                   }}
                   className="text-red-600 focus:text-red-600"
                 >
-                  <Trash2 className="h-4 w-4 mr-2" />
+                  <Trash2 className="size-4 mr-2" />
                   Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -476,7 +471,7 @@ function ListCard({ list, onDelete, onDuplicate, onView }: ListCardProps) {
             )}
 
             <div className="flex items-center gap-1 text-xs text-gray-500">
-              <Calendar className="h-3 w-3" />
+              <Calendar className="size-3" />
               <span>Updated {formatDate(list.updatedAt)}</span>
             </div>
           </div>
@@ -489,7 +484,7 @@ function ListCard({ list, onDelete, onDuplicate, onView }: ListCardProps) {
             className="w-full"
             size="sm"
           >
-            <Eye className="h-4 w-4 mr-2" />
+            <Eye className="size-4 mr-2" />
             View List
           </Button>
         </CardFooter>
@@ -531,8 +526,8 @@ function ListCard({ list, onDelete, onDuplicate, onView }: ListCardProps) {
 function EmptyState({ onCreateList }: { onCreateList: () => void }) {
   return (
     <div className="text-center py-16">
-      <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
-        <ShoppingCart className="h-8 w-8 text-gray-400" />
+      <div className="inline-flex items-center justify-center size-16 bg-gray-100 rounded-full mb-4">
+        <ShoppingCart className="size-8 text-gray-400" />
       </div>
       <h3 className="text-lg font-semibold text-gray-900 mb-2">
         No shopping lists yet
@@ -544,7 +539,7 @@ function EmptyState({ onCreateList }: { onCreateList: () => void }) {
         variant="secondary"
         onClick={onCreateList}
       >
-        <Plus className="h-4 w-4 mr-2" />
+        <Plus className="size-4 mr-2" />
         Create Your First List
       </Button>
     </div>
@@ -555,8 +550,8 @@ function EmptyState({ onCreateList }: { onCreateList: () => void }) {
 function EmptySearchState({ onClearSearch }: { onClearSearch: () => void }) {
   return (
     <div className="text-center py-16">
-      <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
-        <Search className="h-8 w-8 text-gray-400" />
+      <div className="inline-flex items-center justify-center size-16 bg-gray-100 rounded-full mb-4">
+        <Search className="size-8 text-gray-400" />
       </div>
       <h3 className="text-lg font-semibold text-gray-900 mb-2">
         No lists found

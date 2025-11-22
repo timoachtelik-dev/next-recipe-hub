@@ -13,9 +13,9 @@ export async function POST(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id: listId } = await params;
+    const { id: listIdParam } = await params;
     const body = await request.json();
-    const { items } = body;
+    const { items, newListName } = body;
 
     if (!Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
@@ -24,31 +24,58 @@ export async function POST(
       );
     }
 
-    // Verify list belongs to user
-    const list = await prisma.shoppingList.findFirst({
-      where: { id: listId, userId: session.user.id },
-    });
+    // Handle "new" list creation
+    let listId = listIdParam;
+    let list;
 
-    if (!list) {
-      return NextResponse.json({ error: "List not found" }, { status: 404 });
+    if (listIdParam === "new") {
+      if (!newListName || !newListName.trim()) {
+        return NextResponse.json(
+          { error: "New list name is required" },
+          { status: 400 }
+        );
+      }
+
+      list = await prisma.shoppingList.create({
+        data: {
+          userId: session.user.id,
+          name: newListName.trim(),
+        },
+      });
+      listId = list.id;
+    } else {
+      // Verify existing list belongs to user
+      list = await prisma.shoppingList.findFirst({
+        where: { id: listIdParam, userId: session.user.id },
+      });
+
+      if (!list) {
+        return NextResponse.json({ error: "List not found" }, { status: 404 });
+      }
     }
 
-    // Create items in batch
+    // Fetch ingredient names and create items with formatted text
     const createdItems = await Promise.all(
       items.map(async (item) => {
-        const { ingredientId, qty, unit, notes } = item;
+        const { ingredientId, qty, unit } = item;
+
+        // Fetch ingredient name
+        const ingredient = await prisma.ingredient.findUnique({
+          where: { id: ingredientId },
+        });
+
+        if (!ingredient) {
+          throw new Error(`Ingredient not found: ${ingredientId}`);
+        }
+
+        // Format as "{qty} {unit} {name}"
+        const text = `${qty} ${unit} ${ingredient.name}`.trim();
 
         return await prisma.shoppingListItem.create({
           data: {
             listId,
-            ingredientId,
-            qty: parseFloat(qty) || 1,
-            unit: unit || "piece",
-            notes,
+            text,
             checked: false,
-          },
-          include: {
-            ingredient: true,
           },
         });
       })
@@ -60,7 +87,7 @@ export async function POST(
       data: { updatedAt: new Date() },
     });
 
-    return NextResponse.json(createdItems, { status: 201 });
+    return NextResponse.json({ items: createdItems, list }, { status: 201 });
   } catch (error) {
     console.error("Error adding items to list:", error);
     return NextResponse.json(

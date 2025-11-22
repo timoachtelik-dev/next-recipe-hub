@@ -142,18 +142,18 @@ export function NavbarSearch() {
           autoComplete="off"
         />
         {isLoading ? (
-          <Loader2 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 animate-spin" />
+          <Loader2 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 size-4 animate-spin" />
         ) : (
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 pointer-events-none" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 size-4 pointer-events-none" />
         )}
       </form>
 
       {/* Results Dropdown */}
       {isOpen && query.trim() && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 max-h-[80vh] overflow-y-auto z-50">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-baby-powder rounded-lg shadow-xl border border-gray-200 max-h-[80vh] overflow-y-auto z-50">
           {results.length === 0 && !isLoading && (
             <div className="p-6 text-center text-gray-500">
-              <Search className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+              <Search className="size-8 mx-auto mb-2 text-gray-300" />
               <p className="text-sm">No recipes found</p>
               <p className="text-xs text-gray-400 mt-1">Try different keywords</p>
             </div>

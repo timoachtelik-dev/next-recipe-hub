@@ -131,12 +131,12 @@ export function aggregateNutritionValues(
  * @returns Nutrition data per serving
  */
 export function calculateRecipeNutrition(
-  items: (RecipeItem & { ingredient: Ingredient })[],
+  items: (RecipeItem & { ingredient: Ingredient; unit: { id: string } })[],
   servings: number = 1
 ): NutritionData {
   // Calculate nutrition for each ingredient
   const ingredientNutritions = items.map((item) =>
-    calculateIngredientNutrition(item.ingredient, item.qty, item.unit)
+    calculateIngredientNutrition(item.ingredient, item.qty, item.unit.id)
   );
 
   // Aggregate all nutrition values

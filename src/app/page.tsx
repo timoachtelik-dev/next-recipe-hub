@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/components/search/search-bar";
 import { RecipeCard } from "@/components/recipe/recipe-card";
 import { searchRecipes } from "@/server/recipes";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 // Force dynamic rendering to avoid build-time database calls
 export const dynamic = 'force-dynamic';
@@ -15,12 +16,17 @@ export default async function HomePage() {
   });
   return (
     <div className="min-h-screen">
+      {/* Theme Toggle in top right corner */}
+      <div className="fixed top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
+      
       <div className="container mx-auto px-4 py-16">
         <div className="text-center">
-          <h1 className="text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-6xl font-bold text-gray-900 dark:text-dark-gray-900 mb-6">
             next-recipe-hub
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-dark-gray-500 mb-8 max-w-2xl mx-auto">
             Discover, create, and share amazing recipes. Build your personal recipe collection 
             and never forget a great meal again.
           </p>
@@ -33,44 +39,39 @@ export default async function HomePage() {
         
         <div className="mt-16 grid md:grid-cols-3 gap-8">
           <div className="text-center p-6">
-            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="size-16 bg-outline-light dark:bg-dark-outline-light rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">🍳</span>
             </div>
-            <h3 className="text-xl font-semibold mb-2">Create Recipes</h3>
-            <p className="text-gray-600">
+            <h3 className="text-xl font-semibold mb-2 dark:text-dark-gray-900">Create Recipes</h3>
+            <p className="text-gray-600 dark:text-dark-gray-500">
               Build your personal recipe collection with detailed instructions and ingredients.
             </p>
           </div>
           
           <div className="text-center p-6">
-            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="size-16 bg-outline-light dark:bg-dark-outline-light rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">🔍</span>
             </div>
-            <h3 className="text-xl font-semibold mb-2">Discover</h3>
-            <p className="text-gray-600">
+            <h3 className="text-xl font-semibold mb-2 dark:text-dark-gray-900">Discover</h3>
+            <p className="text-gray-600 dark:text-dark-gray-500">
               Find new recipes by searching ingredients, dietary preferences, or cooking time.
             </p>
           </div>
           
           <div className="text-center p-6">
-            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="size-16 bg-outline-light dark:bg-dark-outline-light rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">📝</span>
             </div>
-            <h3 className="text-xl font-semibold mb-2">Shopping Lists</h3>
-            <p className="text-gray-600">
+            <h3 className="text-xl font-semibold mb-2 dark:text-dark-gray-900">Shopping Lists</h3>
+            <p className="text-gray-600 dark:text-dark-gray-500">
               Generate shopping lists from your favorite recipes and never miss an ingredient.
             </p>
           </div>
         </div>
 
-        {/* Search Section */}
-        <div className="mt-16">
-          <SearchBar />
-        </div>
-
         {/* Recipes Section */}
         <div id="recipes" className="mt-16">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">
+          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-dark-gray-900 mb-8">
             Featured Recipes
           </h2>
           {recipes.length > 0 ? (
@@ -82,13 +83,13 @@ export default async function HomePage() {
               </div>
               <div className="text-center">
                 <Button variant="primary" asChild size="lg">
-                  <Link href="/auth/signin?callbackUrl=/app">View All Recipes</Link>
+                  <Link href="/recipes">View All Recipes</Link>
                 </Button>
               </div>
             </>
           ) : (
             <div className="text-center py-12">
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 dark:text-dark-gray-500 mb-6">
                 No recipes available yet. Be the first to create one!
               </p>
               <Button variant="primary" asChild size="lg">

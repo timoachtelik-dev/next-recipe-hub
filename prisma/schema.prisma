@@ -56,16 +56,25 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model Unit {
+  id            String        @id  // e.g., "cup", "g", "tbsp", "pieces"
+  label         String             // Display name: "cup(s)", "g", "tbsp"
+  category      String             // "volume", "weight", "count", "special"
+  recipeItems   RecipeItem[]
+  ingredients   Ingredient[]       @relation("IngredientDefaultUnit")
+}
+
 model Ingredient {
   id               String   @id          // canonical slug, e.g. "tomato"
   name             String   @unique
   category         String?
+  defaultUnitId    String?
+  defaultUnit      Unit?    @relation("IngredientDefaultUnit", fields: [defaultUnitId], references: [id])
   kcalPer100g      Int?
   macros           Json?
   nutritionPer100g Json?    // Detailed nutritional breakdown per 100g
   aliases          String[] // ["Tomate","Roma Tomate"]
   recipeItems      RecipeItem[]
-  listItems        ShoppingListItem[]
 }
 
 model Recipe {
@@ -93,7 +102,8 @@ model RecipeItem {
   recipeId     String
   ingredientId String
   qty          Float
-  unit         String
+  unitId       String
+  unit         Unit       @relation(fields: [unitId], references: [id])
   notes        String?
   ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
   recipe       Recipe     @relation(fields: [recipeId], references: [id])
@@ -127,13 +137,10 @@ model ShoppingList {
 }
 
 model ShoppingListItem {
-  id           String       @id @default(cuid())
-  listId       String
-  ingredientId String
-  qty          Float
-  unit         String
-  checked      Boolean      @default(false)
-  notes        String?
-  ingredient   Ingredient   @relation(fields: [ingredientId], references: [id])
-  list         ShoppingList @relation(fields: [listId], references: [id])
+  id        String       @id @default(cuid())
+  listId    String
+  text      String       // Free-form text (e.g., "2 large tomatoes", "milk")
+  checked   Boolean      @default(false)
+  createdAt DateTime     @default(now())
+  list      ShoppingList @relation(fields: [listId], references: [id], onDelete: Cascade)
 }

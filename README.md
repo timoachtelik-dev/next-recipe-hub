@@ -30,10 +30,11 @@ A full-stack Next.js 15 recipe application built with TypeScript, Prisma, and mo
    # Edit .env with your configuration
    ```
 
-4. **Set up the database:**
+4. **Set up the database and load the recipe dataset:**
    ```bash
    npm run db:push
-   npm run db:seed
+    # Imports prisma/recipe-dataset.json (recipes + nutrition + images)
+   npm run import:from-json
    ```
 
 5. **Start the development server:**
@@ -42,6 +43,14 @@ A full-stack Next.js 15 recipe application built with TypeScript, Prisma, and mo
    ```
 
 Visit [http://localhost:3000](http://localhost:3000) to see the application.
+
+## 📦 Recipe Dataset
+
+The repository ships with a single curated dataset that powers the app:
+
+- `prisma/recipe-dataset.json` – contains every ingredient plus 1,448 recipes with nutrition facts and hero images.
+
+Run `npm run import:from-json` anytime to wipe the database and re-import this dataset. No additional conversion tooling is required.
 
 ## 🛠 Tech Stack
 
@@ -91,6 +100,7 @@ src/
 - `npm run db:push` - Push database schema
 - `npm run db:migrate` - Run database migrations
 - `npm run db:seed` - Seed database with sample data
+- `npm run import:from-json` - Import the curated recipe dataset
 
 ## 🔐 Environment Variables
 

@@ -42,18 +42,24 @@ export default function NewListPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-2xl mx-auto">
-        <Link 
-          href="/dashboard" 
-          className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-6"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Dashboard
-        </Link>
+        <div className="mb-8">
+          <div className="flex items-center gap-4 mb-6">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => router.back()}
+              className="shadow-sm"
+            >
+              <ArrowLeft className="size-4 mr-2" />
+              Back
+            </Button>
+          </div>
+        </div>
 
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-2xl">
-              <ShoppingCart className="h-6 w-6 text-blue-600" />
+              <ShoppingCart className="size-6 text-blue-600" />
               Create New Shopping List
             </CardTitle>
           </CardHeader>

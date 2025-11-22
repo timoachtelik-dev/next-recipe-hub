@@ -3,21 +3,28 @@
 
 /* Global page background */
 body {
-  background-color: #fef8ec; /* floral white - warm, light, neutral earth tone */
+  background-color: #fef8ec;
+  /* floral white - warm, light, neutral earth tone */
+}
+
+/* Dark mode background */
+.dark body {
+  background-color: #1a1a1a;
+  /* dark charcoal */
 }
 
 @theme {
   /* Base colors */
   --color-white: #fff;
   --color-black: #000;
-  
+
   /* Custom earth-tone palette */
   --color-tea-green: #ccd5ae;
   --color-tea-green-dark: #b5bf93;
   --color-beige: #e9edc9;
   --color-beige-dark: #dae0b0;
-  --color-floral-white: #fef8ec;
-  --color-floral-white-dark: #fdf4e4;
+  --color-baby-powder: #f9f7f3;
+  --color-baby-powder-dark: #f2f0ea;
   --color-old-lace: #fef3e0;
   --color-old-lace-dark: #fdf0d5;
   --color-papaya-whip: #faedcd;
@@ -26,19 +33,39 @@ body {
   --color-peach-dark: #f5d48c;
   --color-buff: #d4a373;
   --color-buff-dark: #c49260;
-  
+  --color-dark-surface: #1f1c18;
+  --color-dark-border: #2a2723;
+  --color-dark-gray-200: #3a322c;
+  --color-dark-gray-500: #c8bbab;
+  --color-dark-gray-900: #f7f3ec;
+  --color-dark-orange-500: #ffb15c;
+  --color-dark-outline-light: rgba(255, 255, 255, 0.08);
+
   /* Semantic button colors - using direct hex values */
   --color-primary: #ccd5ae;
+  --color-primary-dark: #b5bf93;
   --color-primary-hover: #b5bf93;
+  --color-primary-dark-hover: --alpha(var(--color-b5bf93-dark) / 30%);
   --color-secondary: #e9edc9;
+  --color-secondary-dark: #dae0b0;
   --color-secondary-hover: #dae0b0;
+  --color-secondary-dark-hover: --alpha(var(--color-dae0b0-dark) / 30%);
   --color-destructive: #c7184a;
+  --color-destructive-dark: #a4133c;
   --color-destructive-hover: #a4133c;
+  --color-destructive-dark-hover: --alpha(var(--color-a4133c-dark) / 30%);
   --color-outline: #d4a373;
+  --color-outline-dark: #c49260;
   --color-outline-hover: #c49260;
+  --color-outline-light-dark: --alpha(var(--color-buff-dark) / 30%);
   --color-link: #faedcd;
+  --color-link-dark: #f7e3b3;
   --color-link-hover: #f7e3b3;
-  
+  --color-link-dark-hover: --alpha(var(--color-papaya-whip-dark) / 30%);
+  --color-outline-light: --alpha(var(--color-buff) / 30%);
+  --color-outline-light-dark: --alpha(var(--color-buff-dark) / 30%);
+
+
   /* Gray scale for text and borders */
   --color-gray-50: #f9fafb;
   --color-gray-100: #f3f4f6;
@@ -50,7 +77,7 @@ body {
   --color-gray-700: #374151;
   --color-gray-800: #1f2937;
   --color-gray-900: #111827;
-  
+
   /* Utility colors */
   --color-red-50: #fef2f2;
   --color-red-100: #fee2e2;
@@ -76,6 +103,7 @@ body {
 
 /* Print Styles for Recipe Pages */
 @media print {
+
   /* Hide navigation, buttons, and interactive elements */
   nav,
   button,
@@ -89,7 +117,6 @@ body {
     font-size: 12pt;
     line-height: 1.4;
     color: #000;
-    background: white;
   }
 
   .container {
@@ -136,7 +163,7 @@ body {
     background: #f9f9f9;
   }
 
-  .recipe-meta > div {
+  .recipe-meta>div {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -223,7 +250,6 @@ body {
 
   /* Ensure no background colors print */
   * {
-    background: white !important;
     color: #000 !important;
   }
 
@@ -234,7 +260,6 @@ body {
     border: 1px solid #000;
     margin: 0.125rem;
     font-size: 8pt;
-    background: white !important;
     color: #000 !important;
   }
 }

@@ -4,10 +4,10 @@ import { SafeImage } from "@/components/ui/safe-image";
 import { RecipeMeta } from "@/components/recipe/recipe-meta";
 import { getRecipeBySlug } from "@/server/recipes";
 import { Step, RecipeWithDetails, NutritionData } from "@/types";
-import { NutritionSummary } from "@/components/nutrition/nutrition-summary";
 import { NutritionBreakdown } from "@/components/nutrition/nutrition-breakdown";
-import { NutritionBadges } from "@/components/nutrition/nutrition-badges";
 import { getNutritionBadges } from "@/lib/nutrition-badges";
+import { hasNutritionValues } from "@/lib/nutrition";
+import { NutritionBadgeToggle } from "@/components/nutrition/nutrition-badge-toggle";
 
 type RecipeItemWithIngredient = RecipeWithDetails['items'][0];
 import { ChefHat } from "lucide-react";
@@ -30,9 +30,12 @@ export default async function RecipePage({ params }: RecipePageProps) {
 
   const steps = recipe.steps as Step[];
 
-  // Get nutrition badges if nutrition data is available
-  const nutritionBadges = recipe.nutrition
-    ? getNutritionBadges(recipe.nutrition as NutritionData, recipe.diets)
+  const nutritionData = recipe.nutrition as NutritionData | null;
+  const hasNutrition = hasNutritionValues(nutritionData);
+
+  // Get nutrition badges if meaningful nutrition data is available
+  const nutritionBadges = hasNutrition && nutritionData
+    ? getNutritionBadges(nutritionData, recipe.diets)
     : [];
 
   return (
@@ -40,18 +43,33 @@ export default async function RecipePage({ params }: RecipePageProps) {
       <div className="max-w-4xl mx-auto">
         <div id="recipe-content" className="recipe-print-container">
           {/* Hero Image */}
-          <div className="aspect-video relative bg-gray-100 rounded-lg overflow-hidden mb-8">
-            <SafeImage
-              src={recipe.heroImage}
-              alt={recipe.title}
-              fill
-              className="object-cover recipe-hero-image"
-              placeholder={
-                <div className="flex items-center justify-center h-full text-gray-400 text-xl">
-                  [Recipe Image]
-                </div>
-              }
-            />
+          <div className="mb-8">
+            <div className="aspect-video relative bg-gray-100 rounded-lg overflow-hidden">
+              <SafeImage
+                src={recipe.heroImage}
+                alt={recipe.title}
+                fill
+                className="object-cover recipe-hero-image"
+                placeholder={
+                  <div className="flex items-center justify-center h-full text-gray-400 text-xl">
+                    [Recipe Image]
+                  </div>
+                }
+              />
+            </div>
+            {recipe.heroImage && (
+              <div className="mt-2 text-center italic text-sm text-gray-600 bg-gray-50 border border-gray-100 rounded-md py-2 px-3">
+                Image credit:&nbsp;
+                <a
+                  href={recipe.heroImage}
+                  className="underline break-words"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {recipe.heroImage}
+                </a>
+              </div>
+            )}
           </div>
 
           {/* Header */}
@@ -79,26 +97,17 @@ export default async function RecipePage({ params }: RecipePageProps) {
               ))}
             </div>
 
-            {nutritionBadges.length > 0 && (
-              <div className="mb-4">
-                <NutritionBadges badges={nutritionBadges} maxBadges={5} />
-              </div>
-            )}
+            <NutritionBadgeToggle
+              badges={nutritionBadges}
+              nutritionData={nutritionData}
+              servings={recipe.servings}
+              maxBadges={5}
+            />
 
             <div className="recipe-meta">
               <RecipeMeta recipe={recipe} />
             </div>
           </div>
-
-          {/* Nutrition Summary */}
-          {recipe.nutrition && (
-            <div className="mb-8">
-              <NutritionSummary
-                nutrition={recipe.nutrition as NutritionData}
-                servings={recipe.servings}
-              />
-            </div>
-          )}
 
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Ingredients */}
@@ -106,9 +115,9 @@ export default async function RecipePage({ params }: RecipePageProps) {
               <h2 className="text-2xl font-semibold mb-4 ingredients-title">Ingredients</h2>
               <div className="space-y-3">
                 {recipe.items.map((item: RecipeItemWithIngredient) => (
-                  <div key={item.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg ingredient-item">
+                  <div key={item.id} className="flex justify-between items-center p-3 bg-baby-powder border border-gray-200 rounded-lg ingredient-item">
                     <span className="font-medium">
-                      {item.qty} {item.unit} {item.ingredient.name}
+                      {item.qty} {item.unit.label} {item.ingredient.name}
                     </span>
                     {item.notes && (
                       <span className="text-sm text-gray-600">
@@ -122,12 +131,10 @@ export default async function RecipePage({ params }: RecipePageProps) {
               <div className="no-print">
                 <RecipePageClient recipe={recipe} />
               </div>
-
-              {/* Nutrition Breakdown */}
-              {recipe.nutrition && (
-                <div className="mt-8 p-6 bg-white border border-gray-200 rounded-lg">
+              {hasNutrition && nutritionData && (
+                <div className="mt-6 p-6 bg-baby-powder border border-gray-200 rounded-lg">
                   <NutritionBreakdown
-                    nutrition={recipe.nutrition as NutritionData}
+                    nutrition={nutritionData}
                     servings={recipe.servings}
                   />
                 </div>
@@ -137,10 +144,11 @@ export default async function RecipePage({ params }: RecipePageProps) {
             {/* Instructions */}
             <div className="lg:col-span-2 instructions-section">
               <h2 className="text-2xl font-semibold mb-4 instructions-title">Instructions</h2>
+              
               <div className="space-y-4">
                 {steps.map((step, index) => (
                   <div key={index} className="flex gap-4 instruction-step">
-                    <div className="flex-shrink-0 w-8 h-8 bg-orange-600 text-white rounded-full flex items-center justify-center font-semibold step-number">
+                    <div className="flex-shrink-0 size-8 bg-orange-600 text-white rounded-full flex items-center justify-center font-semibold step-number">
                       {step.order}
                     </div>
                     <div className="flex-1">
@@ -157,8 +165,8 @@ export default async function RecipePage({ params }: RecipePageProps) {
           {/* Author Info */}
           <div className="mt-12 pt-8 border-t border-gray-200 author-section">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                <ChefHat className="h-6 w-6 text-gray-600" />
+              <div className="size-12 bg-gray-200 rounded-full flex items-center justify-center">
+                <ChefHat className="size-6 text-gray-600" />
               </div>
               <div>
                 <p className="font-medium text-gray-900">

@@ -36,7 +36,7 @@ export function AddToListSuccessDialog({
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-green-600">
-            <ShoppingCart className="h-5 w-5" />
+            <ShoppingCart className="size-5" />
             Items Added Successfully!
           </DialogTitle>
           <DialogDescription>
@@ -46,7 +46,7 @@ export function AddToListSuccessDialog({
 
         <div className="bg-green-50 p-4 rounded-lg border border-green-200">
           <div className="flex items-center gap-2 text-green-800">
-            <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+            <div className="size-2 bg-green-600 rounded-full"></div>
             <span className="font-medium">Ready for shopping!</span>
           </div>
           <p className="text-sm text-green-700 mt-1">
@@ -61,7 +61,7 @@ export function AddToListSuccessDialog({
               className="w-full justify-start"
               variant="secondary"
             >
-              <ShoppingCart className="h-4 w-4 mr-2" />
+              <ShoppingCart className="size-4 mr-2" />
               View Shopping List
             </Button>
 
@@ -70,7 +70,7 @@ export function AddToListSuccessDialog({
               className="w-full justify-start"
               variant="outline"
             >
-              <ChefHat className="h-4 w-4 mr-2" />
+              <ChefHat className="size-4 mr-2" />
               Browse More Recipes
             </Button>
 
@@ -79,7 +79,7 @@ export function AddToListSuccessDialog({
               className="w-full justify-start"
               variant="outline"
             >
-              <Eye className="h-4 w-4 mr-2" />
+              <Eye className="size-4 mr-2" />
               Stay on Recipe
             </Button>
           </div>

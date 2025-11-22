@@ -24,6 +24,7 @@ export async function calculateAndSaveRecipeNutrition(
         items: {
           include: {
             ingredient: true,
+            unit: true,
           },
         },
       },

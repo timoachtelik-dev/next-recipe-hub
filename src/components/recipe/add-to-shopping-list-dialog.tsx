@@ -16,7 +16,7 @@ interface AddToShoppingListDialogProps {
   recipeItems: Array<{
     id: string;
     qty: number;
-    unit: string;
+    unit: { id: string; label: string };
     ingredient: { id: string; name: string };
   }>;
   recipeTitle: string;
@@ -56,7 +56,7 @@ export function AddToShoppingListDialog({
           items: recipeItems.map(item => ({
             ingredientId: item.ingredient.id,
             qty: item.qty,
-            unit: item.unit,
+            unit: item.unit.id,
           })),
           newListName: isCreatingNew ? newListName : undefined,
         }),
@@ -92,7 +92,7 @@ export function AddToShoppingListDialog({
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <ShoppingCart className="h-5 w-5" />
+            <ShoppingCart className="size-5" />
             Add to Shopping List
           </DialogTitle>
           <DialogDescription>
@@ -109,7 +109,7 @@ export function AddToShoppingListDialog({
                 <div key={item.id} className="flex justify-between">
                   <span>{item.ingredient.name}</span>
                   <span className="text-gray-600">
-                    {item.qty} {item.unit}
+                    {item.qty} {item.unit.label}
                   </span>
                 </div>
               ))}
@@ -138,7 +138,7 @@ export function AddToShoppingListDialog({
                           shoppingLists?.find((list: ShoppingListWithItems) => list.id === selectedListId)?.name || "Choose a shopping list..."
                           : "Choose a shopping list..."
                         }
-                        <ChevronDown className="h-4 w-4 opacity-50" />
+                        <ChevronDown className="size-4 opacity-50" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-full min-w-[var(--radix-dropdown-menu-trigger-width)]">
@@ -165,7 +165,7 @@ export function AddToShoppingListDialog({
                     <span className="w-full border-t" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white px-2 text-gray-500">Or</span>
+                    <span className="bg-baby-powder px-2 text-gray-500">Or</span>
                   </div>
                 </div>
 
@@ -174,7 +174,7 @@ export function AddToShoppingListDialog({
                   onClick={handleCreateNewToggle}
                   className="w-full"
                 >
-                  <Plus className="h-4 w-4 mr-2" />
+                  <Plus className="size-4 mr-2" />
                   Create new list
                 </Button>
               </>

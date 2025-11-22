@@ -2,15 +2,61 @@ import { prisma } from "@/lib/db";
 import { CreateRecipeInput, UpdateRecipeInput, RecipeSearchInput } from "@/lib/validators";
 import { calculateAndSaveRecipeNutrition } from "./nutrition";
 
-export async function createRecipe(data: CreateRecipeInput, authorId: string) {
-  const slug = data.title
+const AUTO_NUTRITION_TAGS = new Set([
+  "low sugar",
+  "low-sugar",
+  "low carb",
+  "low-carb",
+  "high protein",
+  "high-protein",
+  "keto friendly",
+  "keto-friendly",
+  "high fiber",
+  "high-fiber",
+  "gluten free",
+  "gluten-free",
+]);
+
+function sanitizeTags(tags: string[] | undefined) {
+  if (!tags) return tags;
+  return tags.filter(tag => !AUTO_NUTRITION_TAGS.has(tag.toLowerCase()));
+}
+
+function slugifyTitle(title: string) {
+  return title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+    .replace(/(^-|-$)/g, "") || "recipe";
+}
+
+async function generateUniqueSlug(title: string, excludeRecipeId?: string) {
+  const baseSlug = slugifyTitle(title);
+  let candidate = baseSlug;
+  let suffix = 2;
+
+  while (
+    await prisma.recipe.findFirst({
+      where: {
+        slug: candidate,
+        ...(excludeRecipeId ? { NOT: { id: excludeRecipeId } } : {}),
+      },
+      select: { id: true },
+    })
+  ) {
+    candidate = `${baseSlug}-${suffix++}`;
+  }
+
+  return candidate;
+}
+
+export async function createRecipe(data: CreateRecipeInput, authorId: string) {
+  const slug = await generateUniqueSlug(data.title);
+  const sanitizedTags = sanitizeTags(data.tags);
 
   const recipe = await prisma.recipe.create({
     data: {
       ...data,
+      ...(sanitizedTags ? { tags: sanitizedTags } : {}),
       slug,
       authorId,
       nutrition: {
@@ -25,7 +71,7 @@ export async function createRecipe(data: CreateRecipeInput, authorId: string) {
         create: data.items.map((item) => ({
           ingredientId: item.ingredientId,
           qty: item.qty,
-          unit: item.unit,
+          unitId: item.unitId,
           notes: item.notes,
         })),
       },
@@ -35,6 +81,7 @@ export async function createRecipe(data: CreateRecipeInput, authorId: string) {
       items: {
         include: {
           ingredient: true,
+          unit: true,
         },
       },
       nutrition: true,
@@ -52,6 +99,7 @@ export async function createRecipe(data: CreateRecipeInput, authorId: string) {
       items: {
         include: {
           ingredient: true,
+          unit: true,
         },
       },
       nutrition: true,
@@ -69,6 +117,7 @@ export async function getRecipe(id: string) {
       items: {
         include: {
           ingredient: true,
+          unit: true,
         },
       },
       nutrition: true,
@@ -84,6 +133,7 @@ export async function getRecipeBySlug(slug: string) {
       items: {
         include: {
           ingredient: true,
+          unit: true,
         },
       },
       nutrition: true,
@@ -92,51 +142,68 @@ export async function getRecipeBySlug(slug: string) {
 }
 
 export async function updateRecipe(id: string, data: UpdateRecipeInput) {
-  const updateData: Record<string, unknown> = { ...data };
-  
-  if (data.title) {
-    updateData.slug = data.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
+  const { items, ...recipeData } = data;
+  if (recipeData.tags) {
+    recipeData.tags = sanitizeTags(recipeData.tags);
+  }
+
+  const updateData: Record<string, unknown> = Object.fromEntries(
+    Object.entries(recipeData).filter(([, value]) => value !== undefined)
+  );
+
+  if (typeof recipeData.title === "string" && recipeData.title.trim()) {
+    updateData.slug = await generateUniqueSlug(recipeData.title, id);
   }
 
   const recipe = await prisma.recipe.update({
     where: { id },
-    data: updateData,
+    data: {
+      ...updateData,
+      ...(items
+        ? {
+            items: {
+              deleteMany: {},
+              create: items.map((item) => ({
+                ingredientId: item.ingredientId,
+                qty: item.qty,
+                unitId: item.unitId,
+                notes: item.notes,
+              })),
+            },
+          }
+        : {}),
+    },
     include: {
       author: true,
       items: {
         include: {
           ingredient: true,
+          unit: true,
         },
       },
       nutrition: true,
     },
   });
 
-  // Recalculate nutrition if ingredients or servings changed
-  if (data.items || data.servings) {
+  if (items || typeof recipeData.servings !== "undefined") {
     await calculateAndSaveRecipeNutrition(id);
-
-    // Fetch the updated recipe with recalculated nutrition
-    const updatedRecipe = await prisma.recipe.findUnique({
-      where: { id },
-      include: {
-        author: true,
-        items: {
-          include: {
-            ingredient: true,
-          },
-        },
-        nutrition: true,
-      },
-    });
-
-    return updatedRecipe || recipe;
   }
 
-  return recipe;
+  const updatedRecipe = await prisma.recipe.findUnique({
+    where: { id },
+    include: {
+      author: true,
+      items: {
+        include: {
+          ingredient: true,
+          unit: true,
+        },
+      },
+      nutrition: true,
+    },
+  });
+
+  return updatedRecipe || recipe;
 }
 
 export async function deleteRecipe(id: string) {
@@ -260,6 +327,7 @@ export async function getUserRecipes(userId: string, limit: number = 6) {
       items: {
         include: {
           ingredient: true,
+          unit: true,
         },
       },
       nutrition: true,

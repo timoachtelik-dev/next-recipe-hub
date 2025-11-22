@@ -8,7 +8,7 @@ export const stepSchema = z.object({
 export const recipeItemSchema = z.object({
   ingredientId: z.string().min(1, "Ingredient is required"),
   qty: z.number().min(0.01, "Quantity must be greater than 0"),
-  unit: z.string().min(1, "Unit is required").max(20, "Unit name is too long"),
+  unitId: z.string().min(1, "Unit is required"),
   notes: z.string().max(200, "Notes are too long").optional(),
 });
 

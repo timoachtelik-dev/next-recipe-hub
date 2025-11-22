@@ -15,11 +15,11 @@ export async function POST(
 
     const { id: listId } = await params;
     const body = await request.json();
-    const { name, qty = 1, unit = "piece" } = body;
+    const { text } = body;
 
-    if (!name || !name.trim()) {
+    if (!text || !text.trim()) {
       return NextResponse.json(
-        { error: "Item name is required" },
+        { error: "Item text is required" },
         { status: 400 }
       );
     }
@@ -33,34 +33,13 @@ export async function POST(
       return NextResponse.json({ error: "List not found" }, { status: 404 });
     }
 
-    // Create or find ingredient by name (normalized to lowercase slug)
-    const ingredientId = name.toLowerCase().replace(/\s+/g, "_");
-    let ingredient = await prisma.ingredient.findUnique({
-      where: { id: ingredientId },
-    });
-
-    if (!ingredient) {
-      ingredient = await prisma.ingredient.create({
-        data: {
-          id: ingredientId,
-          name: name.trim(),
-          aliases: [name.trim()],
-        },
-      });
-    }
-
     // Add item to list and update parent list's updatedAt
     const [item] = await prisma.$transaction([
       prisma.shoppingListItem.create({
         data: {
           listId,
-          ingredientId: ingredient.id,
-          qty: parseFloat(qty) || 1,
-          unit: unit || "piece",
+          text: text.trim(),
           checked: false,
-        },
-        include: {
-          ingredient: true,
         },
       }),
       prisma.shoppingList.update({

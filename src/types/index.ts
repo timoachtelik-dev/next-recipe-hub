@@ -1,17 +1,16 @@
-import type { User, Recipe, Ingredient, ShoppingList, RecipeItem, ShoppingListItem, Nutrition } from "@prisma/client";
+import type { User, Recipe, Ingredient, ShoppingList, RecipeItem, ShoppingListItem, Nutrition, Unit } from "@prisma/client";
 
 export type RecipeWithDetails = Recipe & {
   author: User;
   items: (RecipeItem & {
     ingredient: Ingredient;
+    unit: Unit;
   })[];
   nutrition: Nutrition | null;
 };
 
 export type ShoppingListWithItems = ShoppingList & {
-  items: (ShoppingListItem & {
-    ingredient: Ingredient;
-  })[];
+  items: ShoppingListItem[];
 };
 
 export type RecipeSearchResult = {
