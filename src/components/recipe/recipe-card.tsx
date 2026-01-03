@@ -19,9 +19,9 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
   // Get nutrition badges if nutrition data is available
   const nutritionBadges = recipe.nutrition
     ? getNutritionBadges(
-        recipe.nutrition as NutritionData,
-        recipe.diets
-      )
+      recipe.nutrition as NutritionData,
+      recipe.diets
+    )
     : [];
 
   return (
@@ -41,17 +41,15 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
       </div>
 
       <CardContent className="flex flex-1 flex-col space-y-3 p-4">
-        <h3 className="font-semibold text-lg mb-2 line-clamp-2">
+        <h3 className="font-semibold text-lg mb-2 line-clamp-2 min-h-[3.5rem]">
           {recipe.title}
         </h3>
 
-        {recipe.summary && (
-          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-            {recipe.summary}
-          </p>
-        )}
+        <p className="text-sm text-gray-600 mb-3 line-clamp-2 min-h-[2.5rem]">
+          {recipe.summary || ""}
+        </p>
 
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-1 min-h-[1.5rem]">
           {recipe.diets.slice(0, 2).map((diet: string) => (
             <Badge key={diet} variant="secondary" className="text-xs">
               {diet.replace("_", " ")}

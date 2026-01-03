@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { CreateRecipeInput, UpdateRecipeInput, RecipeSearchInput } from "@/lib/validators";
 import { calculateAndSaveRecipeNutrition } from "./nutrition";
+import { LimitError, MAX_RECIPES_PER_USER } from "@/lib/limits";
 
 const AUTO_NUTRITION_TAGS = new Set([
   "low sugar",
@@ -50,6 +51,14 @@ async function generateUniqueSlug(title: string, excludeRecipeId?: string) {
 }
 
 export async function createRecipe(data: CreateRecipeInput, authorId: string) {
+  const recipeCount = await prisma.recipe.count({
+    where: { authorId },
+  });
+
+  if (recipeCount >= MAX_RECIPES_PER_USER) {
+    throw new LimitError(`Recipe limit reached (${MAX_RECIPES_PER_USER}).`);
+  }
+
   const slug = await generateUniqueSlug(data.title);
   const sanitizedTags = sanitizeTags(data.tags);
 
@@ -77,7 +86,9 @@ export async function createRecipe(data: CreateRecipeInput, authorId: string) {
       },
     },
     include: {
-      author: true,
+      author: {
+        select: { id: true, name: true, image: true },
+      },
       items: {
         include: {
           ingredient: true,
@@ -95,7 +106,9 @@ export async function createRecipe(data: CreateRecipeInput, authorId: string) {
   const updatedRecipe = await prisma.recipe.findUnique({
     where: { id: recipe.id },
     include: {
-      author: true,
+      author: {
+        select: { id: true, name: true, image: true },
+      },
       items: {
         include: {
           ingredient: true,
@@ -113,7 +126,9 @@ export async function getRecipe(id: string) {
   return await prisma.recipe.findUnique({
     where: { id },
     include: {
-      author: true,
+      author: {
+        select: { id: true, name: true, image: true },
+      },
       items: {
         include: {
           ingredient: true,
@@ -129,7 +144,9 @@ export async function getRecipeBySlug(slug: string) {
   return await prisma.recipe.findUnique({
     where: { slug },
     include: {
-      author: true,
+      author: {
+        select: { id: true, name: true, image: true },
+      },
       items: {
         include: {
           ingredient: true,
@@ -174,7 +191,9 @@ export async function updateRecipe(id: string, data: UpdateRecipeInput) {
         : {}),
     },
     include: {
-      author: true,
+      author: {
+        select: { id: true, name: true, image: true },
+      },
       items: {
         include: {
           ingredient: true,
@@ -192,7 +211,9 @@ export async function updateRecipe(id: string, data: UpdateRecipeInput) {
   const updatedRecipe = await prisma.recipe.findUnique({
     where: { id },
     include: {
-      author: true,
+      author: {
+        select: { id: true, name: true, image: true },
+      },
       items: {
         include: {
           ingredient: true,
@@ -294,7 +315,9 @@ export async function searchRecipes(params: RecipeSearchInput) {
       skip,
       take: limit,
       include: {
-        author: true,
+        author: {
+          select: { id: true, name: true, image: true },
+        },
         items: {
           include: {
             ingredient: true,
@@ -323,7 +346,9 @@ export async function getUserRecipes(userId: string, limit: number = 6) {
     where: { authorId: userId },
     take: limit,
     include: {
-      author: true,
+      author: {
+        select: { id: true, name: true, image: true },
+      },
       items: {
         include: {
           ingredient: true,

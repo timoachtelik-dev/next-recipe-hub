@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { createRecipe, searchRecipes } from "@/server/recipes";
 import { createRecipeSchema, recipeSearchSchema } from "@/lib/validators";
+import { LimitError } from "@/lib/limits";
 
 export async function GET(request: NextRequest) {
   try {
@@ -47,6 +48,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(recipe, { status: 201 });
   } catch (error) {
     console.error("Error creating recipe:", error);
+    if (error instanceof LimitError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
     return NextResponse.json(
       { error: "Failed to create recipe" },
       { status: 500 }

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { LimitError, MAX_LIST_ITEMS_PER_LIST } from "@/lib/limits";
+import { createList } from "@/server/lists";
 
 export async function POST(
   request: NextRequest,
@@ -24,6 +26,13 @@ export async function POST(
       );
     }
 
+    if (items.length > MAX_LIST_ITEMS_PER_LIST) {
+      return NextResponse.json(
+        { error: `Shopping list item limit reached (${MAX_LIST_ITEMS_PER_LIST}).` },
+        { status: 403 }
+      );
+    }
+
     // Handle "new" list creation
     let listId = listIdParam;
     let list;
@@ -36,12 +45,7 @@ export async function POST(
         );
       }
 
-      list = await prisma.shoppingList.create({
-        data: {
-          userId: session.user.id,
-          name: newListName.trim(),
-        },
-      });
+      list = await createList({ name: newListName.trim() }, session.user.id);
       listId = list.id;
     } else {
       // Verify existing list belongs to user
@@ -52,6 +56,17 @@ export async function POST(
       if (!list) {
         return NextResponse.json({ error: "List not found" }, { status: 404 });
       }
+    }
+
+    const existingItemCount = await prisma.shoppingListItem.count({
+      where: { listId },
+    });
+
+    if (existingItemCount + items.length > MAX_LIST_ITEMS_PER_LIST) {
+      return NextResponse.json(
+        { error: `Shopping list item limit reached (${MAX_LIST_ITEMS_PER_LIST}).` },
+        { status: 403 }
+      );
     }
 
     // Fetch ingredient names and create items with formatted text
@@ -90,6 +105,9 @@ export async function POST(
     return NextResponse.json({ items: createdItems, list }, { status: 201 });
   } catch (error) {
     console.error("Error adding items to list:", error);
+    if (error instanceof LimitError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
     return NextResponse.json(
       { error: "Failed to add items" },
       { status: 500 }

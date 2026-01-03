@@ -202,7 +202,7 @@ export function RecipePageClient({ recipe }: RecipePageClientProps) {
     const prepTime = recipe.prepMinutes ? `${recipe.prepMinutes} min` : 'N/A';
     const cookTime = recipe.cookMinutes ? `${recipe.cookMinutes} min` : 'N/A';
     const servings = recipe.servings || 'N/A';
-    const author = recipe.author.name || recipe.author.email;
+    const author = recipe.author.name || "Anonymous";
     const createdAt = new Date(recipe.createdAt).toLocaleDateString();
 
     // Build ingredients list

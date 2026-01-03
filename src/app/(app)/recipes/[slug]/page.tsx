@@ -170,7 +170,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
               </div>
               <div>
                 <p className="font-medium text-gray-900">
-                  By {recipe.author.name || recipe.author.email}
+                  By {recipe.author.name || "Anonymous"}
                 </p>
                 <p className="text-sm text-gray-600">
                   Created {new Date(recipe.createdAt).toLocaleDateString()}

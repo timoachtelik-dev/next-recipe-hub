@@ -68,7 +68,7 @@ export async function PUT(
     // Check if the user is the recipe author
     if (recipe.authorId !== session.user.id) {
       return NextResponse.json(
-        { error: `You don't have permission to edit this recipe. This recipe was created by ${recipe.author.name || recipe.author.email}.` },
+        { error: `You don't have permission to edit this recipe. This recipe was created by ${recipe.author.name || "another user"}.` },
         { status: 403 }
       );
     }
@@ -115,7 +115,7 @@ export async function DELETE(
     // Check if the user is the recipe author
     if (recipe.authorId !== session.user.id) {
       return NextResponse.json(
-        { error: `You don't have permission to delete this recipe. This recipe was created by ${recipe.author.name || recipe.author.email}.` },
+        { error: `You don't have permission to delete this recipe. This recipe was created by ${recipe.author.name || "another user"}.` },
         { status: 403 }
       );
     }

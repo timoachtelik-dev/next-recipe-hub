@@ -1,7 +1,9 @@
 import type { User, Recipe, Ingredient, ShoppingList, RecipeItem, ShoppingListItem, Nutrition, Unit } from "@prisma/client";
 
+export type PublicUser = Pick<User, "id" | "name" | "image">;
+
 export type RecipeWithDetails = Recipe & {
-  author: User;
+  author: PublicUser;
   items: (RecipeItem & {
     ingredient: Ingredient;
     unit: Unit;

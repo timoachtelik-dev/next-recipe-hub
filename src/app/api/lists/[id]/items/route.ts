@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/db";
+import { LimitError } from "@/lib/limits";
+import { addItemToList } from "@/server/lists";
 
 export async function POST(
   request: NextRequest,
@@ -24,33 +25,17 @@ export async function POST(
       );
     }
 
-    // Verify list belongs to user
-    const list = await prisma.shoppingList.findFirst({
-      where: { id: listId, userId: session.user.id },
-    });
-
-    if (!list) {
-      return NextResponse.json({ error: "List not found" }, { status: 404 });
-    }
-
-    // Add item to list and update parent list's updatedAt
-    const [item] = await prisma.$transaction([
-      prisma.shoppingListItem.create({
-        data: {
-          listId,
-          text: text.trim(),
-          checked: false,
-        },
-      }),
-      prisma.shoppingList.update({
-        where: { id: listId },
-        data: { updatedAt: new Date() },
-      }),
-    ]);
+    const item = await addItemToList(listId, text.trim(), session.user.id);
 
     return NextResponse.json(item, { status: 201 });
   } catch (error) {
     console.error("Error adding item to list:", error);
+    if (error instanceof LimitError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
+    if (error instanceof Error && error.message === "List not found") {
+      return NextResponse.json({ error: "List not found" }, { status: 404 });
+    }
     return NextResponse.json(
       { error: "Failed to add item" },
       { status: 500 }

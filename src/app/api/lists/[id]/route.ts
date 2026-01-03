@@ -50,6 +50,9 @@ export async function PUT(
     return NextResponse.json(list);
   } catch (error) {
     console.error("Error updating list:", error);
+    if (error instanceof Error && error.message === "List not found") {
+      return NextResponse.json({ error: "List not found" }, { status: 404 });
+    }
     return NextResponse.json(
       { error: "Failed to update list" },
       { status: 500 }
@@ -73,6 +76,9 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting list:", error);
+    if (error instanceof Error && error.message === "List not found") {
+      return NextResponse.json({ error: "List not found" }, { status: 404 });
+    }
     return NextResponse.json(
       { error: "Failed to delete list" },
       { status: 500 }

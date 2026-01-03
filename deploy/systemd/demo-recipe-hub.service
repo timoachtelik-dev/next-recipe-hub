@@ -1,0 +1,21 @@
+[Unit]
+Description=Demo Recipe Hub (Next.js)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/www/demo-recipe-hub
+EnvironmentFile=/var/www/demo-recipe-hub/.env.production
+ExecStart=/usr/bin/npm run start
+Restart=always
+RestartSec=5
+User=www-data
+Group=www-data
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/www/demo-recipe-hub
+
+[Install]
+WantedBy=multi-user.target

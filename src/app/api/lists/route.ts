@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { createList, getUserLists } from "@/server/lists";
 import { createListSchema } from "@/lib/validators";
+import { LimitError } from "@/lib/limits";
 
 export async function GET() {
   try {
@@ -37,6 +38,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(list, { status: 201 });
   } catch (error) {
     console.error("Error creating list:", error);
+    if (error instanceof LimitError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
     return NextResponse.json(
       { error: "Failed to create list" },
       { status: 500 }

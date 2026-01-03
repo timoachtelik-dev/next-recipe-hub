@@ -18,15 +18,15 @@ export const authOptions: NextAuthOptions = {
           }
         : undefined,
       from: process.env.EMAIL_FROM || "noreply@localhost",
-      // For development: log the sign-in link to console
-      async sendVerificationRequest({ identifier: email, url }) {
-        console.log("\n\n📧 SIGN IN LINK FOR:", email);
-        console.log("🔗 Copy this URL to sign in:");
-        console.log("\n", url, "\n\n");
-        
-        // In production, send an actual email here
-        // For now, just log it to console
-      },
+      ...(process.env.NODE_ENV !== "production"
+        ? {
+            async sendVerificationRequest({ identifier: email, url }) {
+              console.log("\n\n📧 SIGN IN LINK FOR:", email);
+              console.log("🔗 Copy this URL to sign in:");
+              console.log("\n", url, "\n\n");
+            },
+          }
+        : {}),
     }),
   ],
   pages: {
