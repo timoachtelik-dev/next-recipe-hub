@@ -22,9 +22,9 @@ cp deploy/.env.production.example /var/www/demo-recipe-hub/.env.production
 ## 3) Database
 
 ```bash
-docker compose up -d
+docker compose --env-file /var/www/demo-recipe-hub/.env.production up -d
 # production-safe migrations
-npm run db:migrate:deploy
+npx prisma migrate deploy
 # optional: seed demo data (destructive)
 npm run import:from-json
 ```
