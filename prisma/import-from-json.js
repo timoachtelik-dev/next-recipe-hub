@@ -15,12 +15,15 @@ async function main() {
   const ingredients = dataset.ingredients ?? [];
   const recipes = dataset.recipes ?? [];
 
+  const seedUserEmail = (process.env.SEED_USER_EMAIL || "demo@example.com").trim();
+  const seedUserName = (process.env.SEED_USER_NAME || "Demo User").trim();
+
   const demoUser = await prisma.user.upsert({
-    where: { email: "demo@example.com" },
+    where: { email: seedUserEmail },
     update: {},
     create: {
-      email: "demo@example.com",
-      name: "Demo User",
+      email: seedUserEmail,
+      name: seedUserName,
     },
   });
 

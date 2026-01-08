@@ -427,12 +427,15 @@ async function main() {
   console.log(`✅ Created ${ingredients.length} ingredients`);
 
   // Create a sample user
+  const seedUserEmail = (process.env.SEED_USER_EMAIL || "demo@example.com").trim();
+  const seedUserName = (process.env.SEED_USER_NAME || "Demo User").trim();
+
   const user = await prisma.user.upsert({
-    where: { email: "demo@example.com" },
+    where: { email: seedUserEmail },
     update: {},
     create: {
-      email: "demo@example.com",
-      name: "Demo User",
+      email: seedUserEmail,
+      name: seedUserName,
     },
   });
 
