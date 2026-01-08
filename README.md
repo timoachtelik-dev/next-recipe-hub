@@ -52,6 +52,7 @@ The repository ships with a single curated dataset that powers the app:
 - `prisma/recipe-dataset.json` – contains every ingredient plus 1,448 recipes with nutrition facts and hero images.
 
 Run `npm run import:from-json` anytime to wipe the database and re-import this dataset. No additional conversion tooling is required.
+In production (`NODE_ENV=production`), `SEED_USER_EMAIL` must be set before running the import.
 
 ## 🛠 Tech Stack
 

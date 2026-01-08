@@ -29,6 +29,12 @@ npm run db:migrate:deploy
 npm run import:from-json
 ```
 
+Notes:
+- Docker binds Postgres to `127.0.0.1:5432` so it is not exposed publicly.
+- In production, `SEED_USER_EMAIL` must be set before running the import.
+- Remove `SEED_USER_EMAIL` / `SEED_USER_NAME` after seeding so future imports
+  are not tied to a stale account.
+
 
 ## 4) Build + start
 

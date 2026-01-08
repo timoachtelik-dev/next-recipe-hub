@@ -15,7 +15,11 @@ async function main() {
   const ingredients = dataset.ingredients ?? [];
   const recipes = dataset.recipes ?? [];
 
-  const seedUserEmail = (process.env.SEED_USER_EMAIL || "demo@example.com").trim();
+  const rawSeedEmail = (process.env.SEED_USER_EMAIL || "").trim();
+  if (process.env.NODE_ENV === "production" && !rawSeedEmail) {
+    throw new Error("SEED_USER_EMAIL must be set in production before importing.");
+  }
+  const seedUserEmail = (rawSeedEmail || "demo@example.com").trim();
   const seedUserName = (process.env.SEED_USER_NAME || "Demo User").trim();
 
   const demoUser = await prisma.user.upsert({
