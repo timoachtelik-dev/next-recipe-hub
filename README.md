@@ -23,6 +23,7 @@ A full-stack Next.js 15 recipe application built with TypeScript, Prisma, and mo
    ```bash
    docker compose up -d
    ```
+   The Docker config binds Postgres to `127.0.0.1:5432` (local only).
 
 3. **Set up environment variables:**
    ```bash
@@ -99,6 +100,7 @@ src/
 - `npm run format` - Format code with Prettier
 - `npm run db:push` - Push database schema
 - `npm run db:migrate` - Run database migrations
+- `npm run db:migrate:deploy` - Run production-safe migrations
 - `npm run db:seed` - Seed database with sample data
 - `npm run import:from-json` - Import the curated recipe dataset
 
@@ -108,18 +110,26 @@ Copy `.env.example` to `.env` and configure:
 
 ```env
 # Database
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/next_recipe_hub?schema=public"
+POSTGRES_USER="postgres"
+POSTGRES_PASSWORD="change-me"
+POSTGRES_DB="next_recipe_hub"
+DATABASE_URL="postgresql://postgres:change-me@localhost:5432/next_recipe_hub?schema=public"
 
 # NextAuth
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="your-secret-key"
 
 # Email (optional)
+EMAIL_SERVER=""
 EMAIL_SERVER_HOST=""
-EMAIL_SERVER_PORT=""
+EMAIL_SERVER_PORT="587"
 EMAIL_SERVER_USER=""
 EMAIL_SERVER_PASSWORD=""
 EMAIL_FROM=""
+
+# Seeded demo owner (optional, used by seed/import scripts)
+SEED_USER_EMAIL="demo@example.com"
+SEED_USER_NAME="Demo User"
 
 # OAuth (optional)
 GITHUB_ID=""

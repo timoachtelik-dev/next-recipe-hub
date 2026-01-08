@@ -23,10 +23,12 @@ cp deploy/.env.production.example /var/www/demo-recipe-hub/.env.production
 
 ```bash
 docker compose up -d
-npm run db:migrate
-# optional: seed demo data
+# production-safe migrations
+npm run db:migrate:deploy
+# optional: seed demo data (destructive)
 npm run import:from-json
 ```
+
 
 ## 4) Build + start
 
