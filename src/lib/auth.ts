@@ -1,10 +1,42 @@
 import type { NextAuthOptions } from "next-auth";
+import type { Adapter } from "next-auth/adapters";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./db";
 import EmailProvider from "next-auth/providers/email";
+import { hashEmail } from "@/lib/email-hash";
+
+const prismaAdapter = PrismaAdapter(prisma);
+
+const maybeHashEmail = (email?: string | null) =>
+  email && email.includes("@") ? hashEmail(email) : email || null;
+
+const hashedEmailAdapter: Adapter = {
+  ...prismaAdapter,
+  createUser: async (data) =>
+    prismaAdapter.createUser({
+      ...data,
+      email: maybeHashEmail(data.email) || "",
+    }),
+  getUserByEmail: async (email) => prismaAdapter.getUserByEmail(hashEmail(email)),
+  updateUser: async (data) =>
+    prismaAdapter.updateUser({
+      ...data,
+      email: maybeHashEmail(data.email),
+    }),
+  createVerificationToken: async (data) =>
+    prismaAdapter.createVerificationToken({
+      ...data,
+      identifier: hashEmail(data.identifier),
+    }),
+  useVerificationToken: async (data) =>
+    prismaAdapter.useVerificationToken({
+      ...data,
+      identifier: hashEmail(data.identifier),
+    }),
+};
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  adapter: hashedEmailAdapter,
   providers: [
     EmailProvider({
       server: process.env.EMAIL_SERVER
@@ -38,6 +70,7 @@ export const authOptions: NextAuthOptions = {
       user: {
         ...session.user,
         id: user.id,
+        email: null,
       },
     }),
   },

@@ -26,7 +26,7 @@ export default async function HomePage() {
           <h1 className="text-6xl font-bold text-gray-900 dark:text-dark-gray-900 mb-6">
             next-recipe-hub
           </h1>
-          <p className="text-xl text-gray-600 dark:text-dark-gray-500 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-700 dark:text-dark-gray-500 mb-8 max-w-2xl mx-auto">
             Discover, create, and share amazing recipes. Build your personal recipe collection 
             and never forget a great meal again.
           </p>
@@ -43,7 +43,7 @@ export default async function HomePage() {
               <span className="text-2xl">🍳</span>
             </div>
             <h3 className="text-xl font-semibold mb-2 dark:text-dark-gray-900">Create Recipes</h3>
-            <p className="text-gray-600 dark:text-dark-gray-500">
+            <p className="text-gray-700 dark:text-dark-gray-500">
               Build your personal recipe collection with detailed instructions and ingredients.
             </p>
           </div>
@@ -53,7 +53,7 @@ export default async function HomePage() {
               <span className="text-2xl">🔍</span>
             </div>
             <h3 className="text-xl font-semibold mb-2 dark:text-dark-gray-900">Discover</h3>
-            <p className="text-gray-600 dark:text-dark-gray-500">
+            <p className="text-gray-700 dark:text-dark-gray-500">
               Find new recipes by searching ingredients, dietary preferences, or cooking time.
             </p>
           </div>
@@ -63,7 +63,7 @@ export default async function HomePage() {
               <span className="text-2xl">📝</span>
             </div>
             <h3 className="text-xl font-semibold mb-2 dark:text-dark-gray-900">Shopping Lists</h3>
-            <p className="text-gray-600 dark:text-dark-gray-500">
+            <p className="text-gray-700 dark:text-dark-gray-500">
               Generate shopping lists from your favorite recipes and never miss an ingredient.
             </p>
           </div>
@@ -89,7 +89,7 @@ export default async function HomePage() {
             </>
           ) : (
             <div className="text-center py-12">
-              <p className="text-gray-600 dark:text-dark-gray-500 mb-6">
+              <p className="text-gray-700 dark:text-dark-gray-500 mb-6">
                 No recipes available yet. Be the first to create one!
               </p>
               <Button variant="primary" asChild size="lg">

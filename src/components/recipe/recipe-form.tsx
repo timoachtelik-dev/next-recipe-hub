@@ -212,17 +212,17 @@ export function RecipeForm({
     <form onSubmit={handleSubmit(onFormSubmit as any)} className="space-y-6">
       {/* Header Section */}
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold text-gray-900">Create Your Recipe</h2>
-        <p className="text-gray-500">Share your culinary masterpiece with the community</p>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-dark-gray-900">Create Your Recipe</h2>
+        <p className="text-gray-500 dark:text-dark-gray-500">Share your culinary masterpiece with the community</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left Column */}
         <div className="space-y-6">
           {/* Basic Information */}
-          <Card className="recipe-card">
-            <CardHeader className="bg-yellow-50">
-              <CardTitle className="flex items-center gap-2 text-yellow-700">
+          <Card className="recipe-card border-gray-200 dark:border-dark-border">
+            <CardHeader className="bg-yellow-50 dark:bg-yellow-950/30">
+              <CardTitle className="flex items-center gap-2 text-yellow-700 dark:text-yellow-200">
                 <ChefHat className="size-5" />
                 Basic Information
               </CardTitle>
@@ -268,9 +268,9 @@ export function RecipeForm({
           </Card>
 
           {/* Timing & Servings */}
-          <Card className="recipe-card">
-            <CardHeader className="bg-blue-50">
-              <CardTitle className="flex items-center gap-2 text-blue-700">
+          <Card className="recipe-card border-gray-200 dark:border-dark-border">
+            <CardHeader className="bg-blue-50 dark:bg-blue-950/30">
+              <CardTitle className="flex items-center gap-2 text-blue-700 dark:text-blue-200">
                 <Clock className="size-5" />
                 Cooking Information
               </CardTitle>
@@ -323,9 +323,9 @@ export function RecipeForm({
           </Card>
 
           {/* Ingredients */}
-          <Card className="recipe-card">
-            <CardHeader className="bg-pink-50">
-              <CardTitle className="flex items-center gap-2 text-pink-700">
+          <Card className="recipe-card border-gray-200 dark:border-dark-border">
+            <CardHeader className="bg-pink-50 dark:bg-pink-950/30">
+              <CardTitle className="flex items-center gap-2 text-pink-700 dark:text-pink-200">
                 <Utensils className="size-5" />
                 Ingredients
               </CardTitle>
@@ -372,16 +372,19 @@ export function RecipeForm({
         {/* Right Column */}
         <div className="space-y-6">
           {/* Instructions */}
-          <Card className="recipe-card">
-            <CardHeader className="bg-green-50">
-              <CardTitle className="flex items-center gap-2 text-green-700">
+          <Card className="recipe-card border-gray-200 dark:border-dark-border">
+            <CardHeader className="bg-green-50 dark:bg-green-950/30">
+              <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-200">
                 <ChefHat className="size-5" />
                 Instructions
               </CardTitle>
             </CardHeader>
             <CardContent>
               {stepFields.map((field, index) => (
-                <div key={field.id} className="space-y-3 p-4 border border-gray-200 rounded-lg bg-green-50/50">
+                <div
+                  key={field.id}
+                  className="space-y-3 p-4 border border-gray-200 dark:border-green-900/50 rounded-lg bg-green-50/50 dark:bg-green-950/20"
+                >
                   <div className="flex justify-between items-center">
                     <h4 className="font-medium text-gray-900">Step {index + 1}</h4>
                     <DeleteButton
@@ -395,7 +398,7 @@ export function RecipeForm({
                     placeholder="Describe this step..."
                     rows={3}
                     className={`w-full p-3 border rounded-md focus:ring-2 focus:ring-gray-300 focus:border-gray-300 bg-transparent resize-none ${
-                      errors.steps?.[index]?.text ? "border-red-500" : "border-gray-200"
+                      errors.steps?.[index]?.text ? "border-red-500" : "border-gray-200 dark:border-dark-border"
                     }`}
                   />
                   {errors.steps?.[index]?.text && (
@@ -421,9 +424,9 @@ export function RecipeForm({
           </Card>
 
           {/* Tags and Diets */}
-          <Card className="recipe-card">
-            <CardHeader className="bg-purple-50">
-              <CardTitle className="flex items-center gap-2 text-purple-700">
+          <Card className="recipe-card border-gray-200 dark:border-dark-border">
+            <CardHeader className="bg-purple-50 dark:bg-purple-950/30">
+              <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-200">
                 <Tag className="size-5" />
                 Tags & Dietary Information
               </CardTitle>
@@ -433,7 +436,12 @@ export function RecipeForm({
                 <label className="block text-sm font-medium mb-3">Tags</label>
                 <div className="flex flex-wrap gap-2 mb-3">
                   {watchedTags.map((tag) => (
-                    <Badge key={tag} variant="outline" className="bg-purple-100 text-purple-800 hover:bg-purple-200 cursor-pointer" onClick={() => removeTag(tag)}>
+                    <Badge
+                      key={tag}
+                      variant="outline"
+                      className="bg-purple-100 text-purple-900 border-purple-300 hover:bg-purple-200 cursor-pointer text-sm px-3 py-1 dark:bg-purple-900/30 dark:text-purple-100 dark:border-purple-500/50 dark:hover:bg-purple-900/45"
+                      onClick={() => removeTag(tag)}
+                    >
                       {tag} <X className="size-3 ml-1" />
                     </Badge>
                   ))}
@@ -446,7 +454,7 @@ export function RecipeForm({
                       variant="outline"
                       size="sm"
                       onClick={() => addTag(tag)}
-                      className="text-xs"
+                      className="text-sm h-9 px-3"
                     >
                       <Plus className="size-3 mr-1" />
                       {tag}
@@ -459,7 +467,12 @@ export function RecipeForm({
                 <label className="block text-sm font-medium mb-3">Dietary Information</label>
                 <div className="flex flex-wrap gap-2 mb-3">
                   {watchedDiets.map((diet) => (
-                    <Badge key={diet} variant="outline" className="bg-pink-100 text-pink-800 hover:bg-pink-200 cursor-pointer" onClick={() => removeDiet(diet)}>
+                    <Badge
+                      key={diet}
+                      variant="outline"
+                      className="bg-pink-100 text-pink-900 border-pink-300 hover:bg-pink-200 cursor-pointer text-sm px-3 py-1 dark:bg-pink-900/30 dark:text-pink-100 dark:border-pink-500/50 dark:hover:bg-pink-900/45"
+                      onClick={() => removeDiet(diet)}
+                    >
                       {diet.replace("_", " ")} <X className="size-3 ml-1" />
                     </Badge>
                   ))}
@@ -472,7 +485,7 @@ export function RecipeForm({
                       variant="outline"
                       size="sm"
                       onClick={() => addDiet(diet)}
-                      className="text-xs"
+                      className="text-sm h-9 px-3"
                     >
                       <Plus className="size-3 mr-1" />
                       {diet.replace("_", " ")}

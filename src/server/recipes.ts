@@ -321,6 +321,7 @@ export async function searchRecipes(params: RecipeSearchInput) {
         items: {
           include: {
             ingredient: true,
+            unit: true,
           },
         },
         nutrition: true,

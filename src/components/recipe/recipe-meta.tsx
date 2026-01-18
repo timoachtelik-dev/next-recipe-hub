@@ -22,7 +22,7 @@ export function RecipeMeta({ recipe }: RecipeMetaProps) {
       )}
       
       {recipe.servings && (
-        <div className="flex items-center gap-2 p-3 bg-blue-50 border border-gray-200 rounded-lg">
+        <div className="flex items-center gap-2 p-3 bg-blue-50 border border-gray-200 rounded-lg dark:bg-blue-950/40 dark:border-blue-900/60">
           <Users className="size-5 text-blue-600" />
           <div>
             <div className="text-sm font-medium text-gray-900">{recipe.servings} servings</div>
@@ -32,7 +32,7 @@ export function RecipeMeta({ recipe }: RecipeMetaProps) {
       )}
       
       {calories > 0 && (
-        <div className="flex items-center gap-2 p-3 bg-green-50 border border-gray-200 rounded-lg">
+        <div className="flex items-center gap-2 p-3 bg-green-50 border border-gray-200 rounded-lg dark:bg-green-950/40 dark:border-green-900/60">
           <Zap className="size-5 text-green-600" />
           <div>
             <div className="text-sm font-medium text-gray-900">{calories} kcal</div>
@@ -42,7 +42,7 @@ export function RecipeMeta({ recipe }: RecipeMetaProps) {
       )}
       
       {recipe.diets.length > 0 && (
-        <div className="flex items-center gap-2 p-3 bg-purple-50 border border-gray-200 rounded-lg">
+        <div className="flex items-center gap-2 p-3 bg-purple-50 border border-gray-200 rounded-lg dark:bg-purple-950/40 dark:border-purple-900/60">
           <ChefHat className="size-5 text-purple-600" />
           <div>
             <div className="text-sm font-medium text-gray-900">

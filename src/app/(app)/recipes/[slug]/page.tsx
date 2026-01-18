@@ -86,12 +86,12 @@ export default async function RecipePage({ params }: RecipePageProps) {
 
             <div className="flex flex-wrap gap-2 mb-4">
               {recipe.diets.map((diet: string) => (
-                <Badge key={diet} variant="secondary">
+                <Badge key={diet} variant="secondary" className="text-sm px-3 py-1">
                   {diet.replace("_", " ")}
                 </Badge>
               ))}
               {recipe.tags.map((tag: string) => (
-                <Badge key={tag} variant="outline">
+                <Badge key={tag} variant="outline" className="text-sm px-3 py-1">
                   {tag}
                 </Badge>
               ))}

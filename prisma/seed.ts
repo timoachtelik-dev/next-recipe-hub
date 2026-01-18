@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { hashEmail } from "../src/lib/email-hash";
 
 const prisma = new PrismaClient();
 
@@ -428,13 +429,14 @@ async function main() {
 
   // Create a sample user
   const seedUserEmail = (process.env.SEED_USER_EMAIL || "demo@example.com").trim();
+  const seedUserEmailHash = hashEmail(seedUserEmail);
   const seedUserName = (process.env.SEED_USER_NAME || "Demo User").trim();
 
   const user = await prisma.user.upsert({
-    where: { email: seedUserEmail },
+    where: { email: seedUserEmailHash },
     update: {},
     create: {
-      email: seedUserEmail,
+      email: seedUserEmailHash,
       name: seedUserName,
     },
   });

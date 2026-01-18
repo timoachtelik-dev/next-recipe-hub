@@ -48,7 +48,7 @@ export default async function DashboardPage() {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card>
+          <Card className="border-gray-200 dark:border-dark-border">
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-orange-100 rounded-lg">
@@ -64,7 +64,7 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-gray-200 dark:border-dark-border">
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-blue-100 rounded-lg">
@@ -80,7 +80,7 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-gray-200 dark:border-dark-border">
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-green-100 rounded-lg">
@@ -99,15 +99,15 @@ export default async function DashboardPage() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white">
+          <Card className="border-gray-200 dark:border-dark-border bg-gradient-to-br from-orange-500 to-orange-600 text-white dark:from-orange-950/70 dark:to-orange-900/70 dark:text-dark-gray-900">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white text-rose">
+              <CardTitle className="flex items-center gap-2 text-white dark:text-dark-gray-900">
                 <Plus className="h-5 w-5" />
                 Create New Recipe
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-orange-100 mb-4">
+              <p className="text-orange-100 dark:text-orange-100/90 mb-4">
                 Share your culinary creations with the community.
               </p>
               <Button
@@ -123,15 +123,15 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+          <Card className="border-gray-200 dark:border-dark-border bg-gradient-to-br from-blue-500 to-blue-600 text-white dark:from-blue-950/70 dark:to-blue-900/70 dark:text-dark-gray-900">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
+              <CardTitle className="flex items-center gap-2 text-white dark:text-dark-gray-900">
                 <Plus className="h-5 w-5" />
                 New Shopping List
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-blue-100 mb-4">
+              <p className="text-blue-100 dark:text-blue-100/90 mb-4">
                 Organize your ingredients and plan your shopping.
               </p>
               <Link href="/lists/new">
@@ -163,7 +163,7 @@ export default async function DashboardPage() {
               ))}
             </div>
           ) : (
-            <Card>
+            <Card className="border-gray-200 dark:border-dark-border">
               <CardContent className="p-12 text-center">
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <BookOpen className="h-8 w-8 text-gray-400" />
@@ -207,7 +207,7 @@ export default async function DashboardPage() {
 
                 return (
                   <Link key={list.id} href={`/lists/${list.id}`}>
-                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                    <Card className="border-gray-200 dark:border-dark-border hover:shadow-lg transition-shadow cursor-pointer">
                       <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                           <List className="h-5 w-5 text-blue-600" />
@@ -236,7 +236,7 @@ export default async function DashboardPage() {
                               className="text-sm text-gray-600 flex items-center gap-2"
                             >
                               <span className={item.checked ? "line-through" : ""}>
-                                {item.qty} {item.unit} {item.ingredient.name}
+                                {item.text}
                               </span>
                             </div>
                           ))}
@@ -253,7 +253,7 @@ export default async function DashboardPage() {
               })}
             </div>
           ) : (
-            <Card>
+            <Card className="border-gray-200 dark:border-dark-border">
               <CardContent className="p-12 text-center">
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <ShoppingCart className="h-8 w-8 text-gray-400" />

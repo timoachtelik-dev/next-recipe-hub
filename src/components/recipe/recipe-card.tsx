@@ -26,7 +26,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow gap-0 pb-0 h-full">
-      <div className="aspect-video relative bg-gray-100 w-full">
+      <div className="h-52 sm:h-56 relative bg-gray-100 w-full">
         <SafeImage
           src={recipe.heroImage}
           alt={recipe.title}

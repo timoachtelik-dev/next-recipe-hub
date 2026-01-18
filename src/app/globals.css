@@ -1,16 +1,18 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Global page background */
 body {
-  background-color: #fef8ec;
-  /* floral white - warm, light, neutral earth tone */
+  background-color: #f6efe6;
+  /* warm parchment */
 }
 
 /* Dark mode background */
 .dark body {
-  background-color: #1a1a1a;
-  /* dark charcoal */
+  background-color: #1d1915;
+  /* warm charcoal */
 }
 
 @theme {
@@ -19,64 +21,64 @@ body {
   --color-black: #000;
 
   /* Custom earth-tone palette */
-  --color-tea-green: #ccd5ae;
-  --color-tea-green-dark: #b5bf93;
-  --color-beige: #e9edc9;
-  --color-beige-dark: #dae0b0;
-  --color-baby-powder: #f9f7f3;
-  --color-baby-powder-dark: #f2f0ea;
-  --color-old-lace: #fef3e0;
-  --color-old-lace-dark: #fdf0d5;
-  --color-papaya-whip: #faedcd;
-  --color-papaya-whip-dark: #f7e3b3;
-  --color-peach: #f7e2ae;
-  --color-peach-dark: #f5d48c;
-  --color-buff: #d4a373;
-  --color-buff-dark: #c49260;
-  --color-dark-surface: #1f1c18;
-  --color-dark-border: #2a2723;
-  --color-dark-gray-200: #3a322c;
-  --color-dark-gray-500: #c8bbab;
-  --color-dark-gray-900: #f7f3ec;
-  --color-dark-orange-500: #ffb15c;
-  --color-dark-outline-light: rgba(255, 255, 255, 0.08);
+  --color-tea-green: #d6d0b4;
+  --color-tea-green-dark: #bfae8a;
+  --color-beige: #e7d9c5;
+  --color-beige-dark: #d9c7ae;
+  --color-baby-powder: #fbf6ef;
+  --color-baby-powder-dark: #f4ecdf;
+  --color-old-lace: #f6efe6;
+  --color-old-lace-dark: #efe2d2;
+  --color-papaya-whip: #f2e1c7;
+  --color-papaya-whip-dark: #e6cfaa;
+  --color-peach: #e9c9a5;
+  --color-peach-dark: #dcb58b;
+  --color-buff: #c9823f;
+  --color-buff-dark: #a86a33;
+  --color-cornsilk: #f3e6d2;
+  --color-dark-surface: #1f1a14;
+  --color-dark-border: #3a3026;
+  --color-dark-gray-200: #3a312a;
+  --color-dark-gray-500: #d4c3b0;
+  --color-dark-gray-900: #f6efe6;
+  --color-dark-orange-500: #e9a15c;
+  --color-dark-outline-light: rgba(233, 161, 92, 0.18);
 
   /* Semantic button colors - using direct hex values */
-  --color-primary: #ccd5ae;
-  --color-primary-dark: #b5bf93;
-  --color-primary-hover: #b5bf93;
-  --color-primary-dark-hover: --alpha(var(--color-b5bf93-dark) / 30%);
-  --color-secondary: #e9edc9;
-  --color-secondary-dark: #dae0b0;
-  --color-secondary-hover: #dae0b0;
-  --color-secondary-dark-hover: --alpha(var(--color-dae0b0-dark) / 30%);
+  --color-primary: #c9823f;
+  --color-primary-dark: #a86a33;
+  --color-primary-hover: #b87439;
+  --color-primary-dark-hover: #945d2c;
+  --color-secondary: #e7d9c5;
+  --color-secondary-dark: #d9c7ae;
+  --color-secondary-hover: #ddcdb6;
+  --color-secondary-dark-hover: #cbb79e;
   --color-destructive: #c7184a;
   --color-destructive-dark: #a4133c;
   --color-destructive-hover: #a4133c;
-  --color-destructive-dark-hover: --alpha(var(--color-a4133c-dark) / 30%);
-  --color-outline: #d4a373;
-  --color-outline-dark: #c49260;
-  --color-outline-hover: #c49260;
-  --color-outline-light-dark: --alpha(var(--color-buff-dark) / 30%);
-  --color-link: #faedcd;
-  --color-link-dark: #f7e3b3;
-  --color-link-hover: #f7e3b3;
-  --color-link-dark-hover: --alpha(var(--color-papaya-whip-dark) / 30%);
-  --color-outline-light: --alpha(var(--color-buff) / 30%);
-  --color-outline-light-dark: --alpha(var(--color-buff-dark) / 30%);
+  --color-destructive-dark-hover: #8b1034;
+  --color-outline: #8b5e34;
+  --color-outline-dark: #704928;
+  --color-outline-hover: #7a5130;
+  --color-link: #b86a2d;
+  --color-link-dark: #e9a15c;
+  --color-link-hover: #a85f28;
+  --color-link-dark-hover: #d18a4b;
+  --color-outline-light: rgba(201, 130, 63, 0.18);
+  --color-outline-light-dark: rgba(233, 161, 92, 0.2);
 
 
   /* Gray scale for text and borders */
-  --color-gray-50: #f9fafb;
-  --color-gray-100: #f3f4f6;
-  --color-gray-200: #e5e7eb;
-  --color-gray-300: #d1d5db;
-  --color-gray-400: #9ca3af;
-  --color-gray-500: #6b7280;
-  --color-gray-600: #4b5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1f2937;
-  --color-gray-900: #111827;
+  --color-gray-50: #faf6f0;
+  --color-gray-100: #f1e6d8;
+  --color-gray-200: #d8c6b3;
+  --color-gray-300: #b9a38e;
+  --color-gray-400: #8d7361;
+  --color-gray-500: #6b5444;
+  --color-gray-600: #543f32;
+  --color-gray-700: #3f2e24;
+  --color-gray-800: #2f221a;
+  --color-gray-900: #231811;
 
   /* Utility colors */
   --color-red-50: #fef2f2;
@@ -99,6 +101,28 @@ body {
   --color-orange-500: #f97316;
   --color-orange-600: #ea580c;
   --color-orange-700: #c2410c;
+}
+
+.dark {
+  --color-baby-powder: #241e18;
+  --color-baby-powder-dark: #2b241d;
+  --color-old-lace: #231c15;
+  --color-old-lace-dark: #2a231b;
+  --color-papaya-whip: #2a221a;
+  --color-papaya-whip-dark: #332a21;
+  --color-peach: #2f261d;
+  --color-peach-dark: #3a3026;
+  --color-cornsilk: #221c16;
+  --color-gray-50: #241e18;
+  --color-gray-100: #2b241d;
+  --color-gray-200: #3a312a;
+  --color-gray-300: #4a3f35;
+  --color-gray-400: #7a6a5b;
+  --color-gray-500: #bcae9c;
+  --color-gray-600: #d4c3b0;
+  --color-gray-700: #e4d6c6;
+  --color-gray-800: #f0e6d9;
+  --color-gray-900: #f6efe6;
 }
 
 /* Print Styles for Recipe Pages */

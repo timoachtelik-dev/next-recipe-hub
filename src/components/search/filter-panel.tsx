@@ -89,7 +89,7 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:w-[400px] overflow-y-auto">
+      <SheetContent className="w-full sm:w-[400px] overflow-y-auto text-gray-900">
         <SheetHeader className="space-y-3">
           <div className="flex items-center gap-2">
             <SheetTitle className="text-2xl font-bold">Filters</SheetTitle>
@@ -115,7 +115,7 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
         <div className="space-y-8 p-6">
           {/* Diet */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-lg flex items-center gap-2">
+            <h3 className="font-semibold text-lg flex items-center gap-2 text-gray-900">
               <span>🥗</span> Diet Preferences
             </h3>
             <div className="grid grid-cols-2 gap-3">
@@ -129,8 +129,8 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
                   className={`
                     relative flex items-center justify-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all
                     ${filters.diet === option.value 
-                      ? 'border-orange-500 bg-orange-50 text-orange-700' 
-                      : 'border-gray-200 hover:border-gray-300 bg-baby-powder'
+                      ? 'border-orange-500 bg-orange-50 text-orange-800' 
+                      : 'border-gray-300 hover:border-gray-400 bg-white text-gray-900'
                     }
                   `}
                 >
@@ -150,7 +150,7 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
 
           {/* Tags */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-lg flex items-center gap-2">
+            <h3 className="font-semibold text-lg flex items-center gap-2 text-gray-900">
               <span>🏷️</span> Recipe Tags
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -158,7 +158,11 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
                 <Badge
                   key={tag}
                   variant={filters.tags.includes(tag) ? "default" : "outline"}
-                  className="cursor-pointer px-3 py-1.5 text-sm hover:scale-105 transition-transform"
+                  className={`cursor-pointer px-3 py-1.5 text-sm hover:scale-105 transition-transform ${
+                    filters.tags.includes(tag)
+                      ? "bg-orange-600 text-white border-orange-600 hover:bg-orange-700"
+                      : "bg-white text-gray-900 border-gray-300 hover:bg-gray-100"
+                  }`}
                   onClick={() => handleTagToggle(tag)}
                 >
                   {tag}
@@ -185,7 +189,7 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
               step={15}
               className="w-full"
             />
-            <div className="flex justify-between text-xs text-gray-500">
+            <div className="flex justify-between text-xs text-gray-700">
               <span>Quick</span>
               <span>Medium</span>
               <span>Long</span>
@@ -207,7 +211,7 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
             </div>
             <div className="space-y-3">
               <div>
-                <label className="text-xs text-gray-600 mb-1 block">Minimum</label>
+                <label className="text-xs text-gray-700 mb-1 block">Minimum</label>
                 <Slider
                   value={[filters.minServings]}
                   onValueChange={([value]) => setFilters(prev => ({ ...prev, minServings: value }))}
@@ -217,7 +221,7 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
                 />
               </div>
               <div>
-                <label className="text-xs text-gray-600 mb-1 block">Maximum</label>
+                <label className="text-xs text-gray-700 mb-1 block">Maximum</label>
                 <Slider
                   value={[filters.maxServings]}
                   onValueChange={([value]) => setFilters(prev => ({ ...prev, maxServings: value }))}
@@ -247,7 +251,7 @@ export function FilterPanel({ open, onOpenChange, onApplyFilters, initialFilters
               step={50}
               className="w-full"
             />
-            <div className="flex justify-between text-xs text-gray-500">
+            <div className="flex justify-between text-xs text-gray-700">
               <span>Light</span>
               <span>Moderate</span>
               <span>Hearty</span>

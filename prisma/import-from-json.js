@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const { existsSync, readFileSync } = require("fs");
+const { createHash } = require("crypto");
 
 const prisma = new PrismaClient();
 
@@ -20,13 +21,14 @@ async function main() {
     throw new Error("SEED_USER_EMAIL must be set in production before importing.");
   }
   const seedUserEmail = (rawSeedEmail || "demo@example.com").trim();
+  const seedUserEmailHash = hashEmail(seedUserEmail);
   const seedUserName = (process.env.SEED_USER_NAME || "Demo User").trim();
 
   const demoUser = await prisma.user.upsert({
-    where: { email: seedUserEmail },
+    where: { email: seedUserEmailHash },
     update: {},
     create: {
-      email: seedUserEmail,
+      email: seedUserEmailHash,
       name: seedUserName,
     },
   });
@@ -135,6 +137,12 @@ async function main() {
       },
     });
   }
+}
+
+function hashEmail(email) {
+  const normalized = String(email).trim().toLowerCase();
+  const pepper = process.env.EMAIL_HASH_PEPPER || "";
+  return createHash("sha256").update(`${normalized}${pepper}`).digest("hex");
 }
 
 main()
