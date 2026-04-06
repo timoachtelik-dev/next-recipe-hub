@@ -28,17 +28,22 @@ const hashedEmailAdapter: Adapter = {
       ...data,
       identifier: hashEmail(data.identifier),
     }),
-  useVerificationToken: async (data) =>
-    prismaAdapter.useVerificationToken({
+  useVerificationToken: async (data) => {
+    const result = await prismaAdapter.useVerificationToken({
       ...data,
       identifier: hashEmail(data.identifier),
-    }),
+    });
+    // NextAuth compares invite.identifier with the plain email from the URL,
+    // so we must return the original unhashed identifier.
+    return result ? { ...result, identifier: data.identifier } : null;
+  },
 };
 
 export const authOptions: NextAuthOptions = {
   adapter: hashedEmailAdapter,
   providers: [
     EmailProvider({
+      maxAge: 24 * 60 * 60, // 24 hours
       server: process.env.EMAIL_SERVER
         ? {
             host: process.env.EMAIL_SERVER_HOST,
