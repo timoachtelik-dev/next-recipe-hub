@@ -22,7 +22,18 @@
 
 # misc
 .DS_Store
+
+# keys & certificates
 *.pem
+*.key
+*.p8
+*.p12
+*.pfx
+*.cert
+*.crt
+*.cer
+sshGithub
+sshGithub.pub
 
 # debug
 npm-debug.log*
