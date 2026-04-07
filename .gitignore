@@ -23,6 +23,10 @@
 # misc
 .DS_Store
 
+# scripts
+deploy.sh
+setup-server.sh
+
 # keys & certificates
 *.pem
 *.key
